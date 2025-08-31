@@ -11,7 +11,7 @@ sys.path.insert(0, PT_flask)
 from flask_sqlalchemy import SQLAlchemy
 from app.models import db, Day_of_routine
 from app.starting_app import app
-from app.all_routines import routines
+from app.data.all_routines import routines
 
 
 def add_days_to_routine(model, routine, routine_name):

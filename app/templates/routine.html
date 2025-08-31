@@ -1,7 +1,10 @@
 {% extends "navbar.html" %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='routine.css')}}">
+{% endblock %}
+
+{% block content %}
 
 <div class="container">
     <h1>Workout Program</h1>
@@ -13,7 +16,7 @@
             <thead>
                 <tr>
                     <th>Workout Name</th>
-                    <th>Tutorial</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,4 +36,4 @@
 
 <script src="{{ url_for('static', filename='routine.js') }}"></script>
 
-{% endblock %}
+{% endblock content%}

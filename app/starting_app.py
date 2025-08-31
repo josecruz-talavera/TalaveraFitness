@@ -37,7 +37,7 @@ from app.models import (
     AdminView,
     MyAdminIndexView,
 )
-from app.info_to_insert import *
+from app.data.info_to_insert import *
 from app.workout_functions import (
     list_of_videos,
     routine_with_videos,

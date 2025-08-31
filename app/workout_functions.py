@@ -1,9 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 import boto3
 from app.models import Workouts, Routine,User, db
-from app.info_to_insert import *
+
 import os
 from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 s3 = boto3.client("s3")
 bucket_name = os.getenv("AWS_BUCKET_NAME")
