@@ -1,0 +1,59 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='about_me.css')}}">
+
+<div class="container">
+    <h1>About Me</h1>
+    
+    <div class="hero-section">
+        <div class="video-container">
+            <video controls autoplay muted loop>
+                <source src="{{ about_me_vid }}" type="video/mp4" >
+            </video>
+        </div>
+    </div>
+    
+    <div class="about-content">
+        <div class="intro-section">
+            <h2>Meet Your Coach</h2>
+            <p class="intro">
+                Hey there, my name is <strong>Jose Talavera</strong> and I am a drug-free strength training coach dedicated to helping you achieve your fitness goals safely and effectively.
+            </p>
+        </div>
+        
+        <div class="story-section">
+            <h2>My Journey</h2>
+            <p class="about-me">
+                My passion for bodybuilding began during my high school years. I looked at myself in the mirror and decided I wanted to look like a superhero. It wasn't easy at first - I felt like I was in a whole new world with little to no knowledge in this journey. Through dedication and perseverance, I have learned quite a lot from this different world, and I would like to share it with you.
+            </p>
+        </div>
+        
+        <div class="mission-section">
+            <h2>My Mission</h2>
+            <p class="my-goal">
+                I have gained experience through practice and teaching as a Personal Trainer since 2022. My main goal for you is great health and safe programs to avoid injuries. Everything I share with you I have tried and practiced myself. I believe in leading by example and providing you with proven, effective training methods that prioritize your safety and long-term success.
+            </p>
+        </div>
+        
+        <div class="values-section">
+            <h2>What I Stand For</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3>🏋️ Drug-Free Training</h3>
+                    <p>I believe in achieving results through natural, sustainable methods that prioritize your health and well-being.</p>
+                </div>
+                <div class="value-card">
+                    <h3>🛡️ Safety First</h3>
+                    <p>Every program is designed with injury prevention in mind, ensuring you can train consistently and safely.</p>
+                </div>
+                <div class="value-card">
+                    <h3>📈 Proven Results</h3>
+                    <p>All training methods I share have been tested and proven effective through my own experience and client success.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

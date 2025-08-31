@@ -1,0 +1,33 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create_account.css')}}">
+
+{% with messages = get_flashed_messages() %}
+    {%if messages%}
+        {% for msg in messages %}
+            <p>{{msg}}</p>        
+        {% endfor %}
+    {% endif %}
+{% endwith%}
+
+<div class="container">
+    <h1>New user</h1>
+    
+    <form action="#" method="POST">
+        <div class="basic-info">
+            <p><input type="text" name="username" placeholder="Username" /></p>
+            <p><input type="email" name="email" placeholder="Enter Email" value="{{email if email}}"/></p>
+            <p><input type="text" name="first_name" placeholder="First name"/></p>
+            <p><input type="text" name="last_name" placeholder="Last name"/></p>
+            <p><input type="password" name ="password" placeholder="password" required="required"></p>
+        </div>
+
+        <div class="submit-btn">
+            <button type="submit" value="submit" class="create-account-btn">Create Account</button>
+        </div>
+        <a class="login-link" href="{{url_for('login')}}">Already have an account?</a>
+    </form>
+</div>
+
+{% endblock %}

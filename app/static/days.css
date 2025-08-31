@@ -1,0 +1,402 @@
+/* Days Page - Unified Design System (Matching Routine.css) */
+body {
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    margin-top: 20px;
+    color: var(--text-primary);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.day_title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 2rem 0 1.5rem 0;
+    color: var(--text-secondary);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.day_title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--accent-color);
+    border-radius: 1px;
+}
+
+p {
+    font-size: var(--font-size-normal);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+}
+
+#workouts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    color: var(--text-primary);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.workout {
+    font-size: var(--font-size-normal);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+#workouts, #complete-btn {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+
+.workout {
+    display: flex;
+    font-size: var(--font-size-normal);
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.weight-lifted, .reps, .sets {
+    width: 60px;
+    height: 35px;
+    font-size: var(--font-size-small);
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    margin: 0 var(--spacing-xs);
+    text-align: center;
+}
+
+.weight-lifted:focus, .reps:focus, .sets:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.video-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    max-width: 800px;
+}
+
+.exercise-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0 8px 32px var(--shadow-light);
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-normal);
+}
+
+.exercise-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px var(--shadow-medium);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.exercise-image {
+    width: 100px;
+    height: auto;
+    border-radius: var(--border-radius-md);
+    margin-right: var(--spacing-md);
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.exercise-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.exercise-title {
+    font-size: var(--font-size-normal);
+    margin: 0 0 var(--spacing-sm);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.exercise-sets,
+.exercise-reps,
+.exercise-weight {
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+    margin: var(--spacing-xs) 0;
+}
+
+.change-day-id-btn {
+    background: rgba(52, 152, 219, 0.8);
+    color: var(--text-primary);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-normal);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 12px var(--shadow-light);
+    margin: var(--spacing-md) 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.change-day-id-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px var(--shadow-medium);
+}
+
+.change-day-id-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .container {
+        max-width: 95%;
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        padding: 8px;
+    }
+    
+    .container {
+        padding: 8px;
+        max-width: 100%;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 1.2rem;
+        margin-top: 70px;
+        line-height: 1.2;
+    }
+    
+    .day_title {
+        font-size: 1.6rem;
+        margin: 70px 0 1rem 0;
+        line-height: 1.3;
+    }
+    
+    .day_title::after {
+        width: 50px;
+        height: 2px;
+    }
+    
+    .workout {
+        font-size: var(--font-size-small);
+    }
+    
+    .change-day-id-btn {
+        font-size: var(--font-size-small);
+        padding: var(--spacing-sm);
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    p {
+        font-size: var(--font-size-small);
+    }
+    
+    .video-link {
+        width: 100%;
+    }
+    
+    .exercise-card {
+        padding: var(--spacing-md);
+        margin: var(--spacing-sm) 0;
+        border-radius: var(--border-radius-md);
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .exercise-image {
+        width: 80px;
+        margin-right: 0;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .exercise-info {
+        margin-left: 0;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .exercise-title {
+        font-size: var(--font-size-normal);
+        text-align: center;
+    }
+    
+    .exercise-sets,
+    .exercise-reps,
+    .exercise-weight {
+        font-size: var(--font-size-small);
+        text-align: center;
+    }
+    
+    .weight-lifted, .reps, .sets {
+        width: 50px;
+        height: 30px;
+        font-size: var(--font-size-small);
+        margin: 0 var(--spacing-xs);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        padding: 5px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        margin-top: 70px;
+    }
+    
+    .day_title {
+        font-size: 1.4rem;
+        margin: 70px 0 0.8rem 0;
+    }
+    
+    .day_title::after {
+        width: 40px;
+    }
+    
+    .exercise-card {
+        padding: var(--spacing-sm);
+        border-radius: var(--border-radius-sm);
+    }
+    
+    .exercise-image {
+        width: 60px;
+    }
+    
+    .exercise-title {
+        font-size: var(--font-size-small);
+    }
+    
+    .exercise-sets,
+    .exercise-reps,
+    .exercise-weight {
+        font-size: var(--font-size-small);
+    }
+    
+    .weight-lifted, .reps, .sets {
+        width: 45px;
+        height: 28px;
+        font-size: var(--font-size-small);
+        padding: var(--spacing-xs);
+    }
+}
+
+@media screen and (max-width: 360px) {
+    h1 {
+        font-size: 1.6rem;
+        margin-top: 70px;
+    }
+    
+    .day_title {
+        font-size: 1.2rem;
+        margin: 70px 0 0.8rem 0;
+    }
+    
+    .exercise-card {
+        padding: var(--spacing-xs);
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .exercise-card:hover {
+        transform: none;
+        background: var(--card-bg);
+    }
+    
+    .exercise-card:active {
+        background: rgba(255, 255, 255, 0.15);
+        transform: scale(0.98);
+    }
+    
+    .change-day-id-btn:hover {
+        transform: none;
+        background: rgba(52, 152, 219, 0.8);
+    }
+    
+    .change-day-id-btn:active {
+        background: var(--accent-hover);
+        transform: scale(0.98);
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(52, 152, 219, 0.6);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(52, 152, 219, 0.8);
+}
+

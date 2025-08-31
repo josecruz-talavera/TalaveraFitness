@@ -1,0 +1,15 @@
+{% extends "navbar.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+<body>
+    <div class="container">
+        <h1>Log In or Sign up</h1>
+        <div class="auth-links">
+            <a href="{{ url_for('login') }}" class="btn">Log in</a>
+            <a href="{{ url_for('create_account') }}" class="btn">Create Account</a>
+        </div>
+    </div>
+</body>
+
+{% endblock %}

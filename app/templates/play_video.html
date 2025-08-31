@@ -1,0 +1,35 @@
+{% extends "navbar.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Video</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='play_video.css')}}">
+</head>
+<body>
+    <div class="container">
+    <h1>{{ workout_name.title() }}</h1>
+    
+    <form action="#" method="POST">
+    <!-- Video player -->
+    <div class="video_container">
+        <video width="600" controls>
+            <source src="{{ video_url }}" type="video/mp4">
+            <source src="{{video_url }}" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+        
+    </div>
+    <div class="submit-btn">
+        <button type="submit" value="submit" class="return-btn">Return to Day</button>
+    </div>
+    </form>
+    <a href="{{url_for('day')}}">Return back to routine</a>
+    </div>
+
+</body>
+</html>
+
+{% endblock content%}

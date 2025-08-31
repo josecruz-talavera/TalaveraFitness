@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Base styles for consistent design across all pages -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+    <!-- Navbar specific styles -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css')}}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="/" class="brand">TalaveraTraining</a>
+        <div class="menu" id="navMenu">
+            <a href="{{url_for('routine')}}">Routine</a>
+            <a href="{{url_for('day')}}">Day</a>
+            <a href="{{url_for('about_me')}}">About</a>
+            <a href="{{url_for('contact_us')}}">Contact</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+        </div>
+        <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a>
+    </div>
+{%block content%}
+{% endblock content%}
+<script src="{{ url_for('static', filename='navbar.js') }}"></script>
+
+</body>
+</html>

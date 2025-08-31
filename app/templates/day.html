@@ -1,0 +1,38 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='days.css')}}">
+
+<div id="workouts">
+    <h1 class="day_title">Day {{day.title()}}</h1>
+    <p><b>Intensity is the amount of strength you should be using in your separate Reps.</b></p>
+    <p>
+        Here is the routine we will be following, we will focus on keeping this in 3-5 sets with 12-15 repetitions.
+        We want to track your progress so please input your data in the input boxes.
+    </p>
+
+    {% for workout in workout_day.items() %}
+    <a class="video-link" data-video-url="{{workout_day[workout[0]][0]}}">
+        <div class="exercise-card">
+            <img src="{{ workout_day[workout[0]][1] or 'https://causey.s3.us-east-2.amazonaws.com/workout_pics/no_image.JPG' }}" class="exercise-image">
+            
+            <div class="exercise-info">
+                <h3 class="exercise-title">{{workout[0].title()}}</h3>
+                <p class="exercise-sets">4 sets</p>
+                <p class="exercise-reps">12-15 reps</p>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    
+    <div id="complete-btn">
+        <form id="change-day-id-form" action="{{ url_for('change_day_id') }}" method="POST">
+            <input type="hidden" name="day_id" value="{{day.id}}">
+            <button data-id="{{day.id}}" type="submit" class="change-day-id-btn" value="change day id">Complete</button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='day.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='routine.css')}}">
+
+<div class="container">
+    <h1>Workout Program</h1>
+
+    {% for workout_name, workouts in routine_days.items() %}
+    <div class="workout-section">
+        <h2>{{workout_name.title()}}</h2>
+        <table class="workout-table">
+            <thead>
+                <tr>
+                    <th>Workout Name</th>
+                    <th>Tutorial</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for workout, workout_link in workouts.items()%}
+                <tr>
+                    <td>{{workout.title()}}</td>
+                    <td>
+                        <a class="video-link" data-video-url="{{workout_link[0]}}">Watch Video</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+
+<script src="{{ url_for('static', filename='routine.js') }}"></script>
+
+{% endblock %}
