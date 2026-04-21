@@ -1,5 +1,5 @@
-body{
-    background-color: #292033;
+body {
+    background: var(--primary-bg);
 }
 
 #workouts {
@@ -7,7 +7,7 @@ body{
     flex-direction: column;
     align-items: center; /* Center all items horizontally */
     width: 100%;
-    color: white;
+    color: var(--text-primary);
 }
 
 .workout {
@@ -64,7 +64,9 @@ p{
 }
 
 .exercise-card {
-    background-color: #3b2f4a; /* Slightly lighter purple for the box */
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(8px);
     border-radius: 12px;
     cursor: pointer;
     padding: 16px;
@@ -72,7 +74,7 @@ p{
     display: flex;
     flex-direction: row; /* Ensure horizontal layout */
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px var(--shadow-light);
     width: 90%; /* Make the card wider */
     max-width: 800px; /* Set a maximum width */
 }
@@ -96,13 +98,13 @@ p{
 .exercise-title {
     font-size: 1.2rem;
     margin: 0 0 8px;
-    color: #d1d1d1;
+    color: var(--text-primary);
 }
 
 .exercise-sets,
 .exercise-reps {
     font-size: 0.9rem;
-    color: #d1d1d1; /* Lighter grey for sub-text */
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -113,15 +115,15 @@ p{
     
     border: none;
     border-radius: 5px;
-    background-color: black;
-    color: white;
+    background: rgba(52, 152, 219, 0.85);
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.3s ease; /* Smooth transition for resizing */
 }
 
 .change-day-id-btn:hover {
-    background-color: grey;
-    color: white;
+    background: var(--accent-hover);
+    color: var(--text-primary);
 }
 /* Font size for small screens (e.g., phones) */
 @media (max-width: 599px) {

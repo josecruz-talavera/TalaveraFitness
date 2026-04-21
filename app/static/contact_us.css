@@ -1,94 +1,153 @@
 body {
     background-color: #292033;
+    color: #f5f5f5;
 }
 
-.container_mt-5 {
-    text-align: center;
+.contact-container {
+    max-width: 760px;
+    margin: 40px auto 0;
+    padding: 0 12px;
+}
+
+.contact-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px var(--shadow-light);
 }
 
 h1 {
-    font-size: 50px;
-    color: white;
-}
-
-.form-label {
-    font-size: 30px;
-    color: white;
+    font-size: 40px;
+    color: #ffffff;
+    text-align: center;
+    margin: 0 0 24px;
 }
 
 .form-group {
-        
-    padding: 10px;
-    
+    padding: 10px 0;
 }
-.form-control {
 
-    height: 30px;
-    width: 200px;
+.form-label {
+    display: block;
     font-size: 20px;
+    color: #f5f5f5;
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-control-msg {
+    width: 100%;
+    font-size: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    padding: 10px 12px;
+}
+
+.form-control:focus,
+.form-control-msg:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-control {
+    min-height: 44px;
 }
 
 .form-control-msg {
-    height: 100px;
-    width:500px;
-    font-size: 20px;
+    min-height: 140px;
+    resize: vertical;
 }
-.btn-btn-primary {
+
+.text-danger {
+    display: block;
+    color: #ff8a8a;
     font-size: 14px;
-    padding: 8px 16px;
-    margin-left: 50px;
-    margin-top: 10px;
+    margin-top: 6px;
 }
 
 .send-btn {
     text-align: center;
+    margin-top: 12px;
 }
 
 .btn-btn-primary {
-    padding: 30px 40px;
-    font-size: 24px;
-    
+    padding: 14px 28px;
+    font-size: 20px;
     border: none;
-    border-radius: 5px;
-    background-color: black;
-    color: white;
+    border-radius: 8px;
+    background-color: #000000;
+    color: #ffffff;
     cursor: pointer;
-    transition: all 0.5s ease; /* Smooth transition for resizing */
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .btn-btn-primary:hover {
-    background-color: grey;
-    color: white;
+    background-color: #5f5f5f;
+    transform: translateY(-1px);
 }
-/* Font size for small screens (e.g., phones) */
-@media screen and (max-width: 599px) {
+
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.flashes li {
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.flashes .success {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.flashes .error {
+    background: rgba(255, 82, 82, 0.2);
+    border: 1px solid rgba(255, 82, 82, 0.5);
+}
+
+.flashes .info {
+    background: rgba(33, 150, 243, 0.2);
+    border: 1px solid rgba(33, 150, 243, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+    .contact-container {
+        margin: 20px auto 0;
+        padding: 0 10px;
+    }
+
+    .contact-card {
+        padding: 18px;
+    }
 
     h1 {
-        font-size: 25px;
+        font-size: 30px;
     }
+
     .form-label {
-        font-size: 20px;
-    }
-    .form-group {
-        
-        padding: 10px;
-        
-    }
-    .form-control {
-
-        height: 20px;
-        width: 100px;
-        font-size: 15px;
+        font-size: 18px;
     }
 
+    .form-control,
     .form-control-msg {
-        height: 50px;
-        width:200px;
-        font-size: 10px;
+        font-size: 16px;
     }
+
     .btn-btn-primary {
-        font-size: 14px;
-        padding: 8px 16px;
-        margin-left: 50px;
-        margin-top: 10px;
+        font-size: 16px;
+        padding: 10px 18px;
     }
 }

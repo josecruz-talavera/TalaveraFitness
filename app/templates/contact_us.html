@@ -1,57 +1,50 @@
-<!DOCTYPE HTML> 
-
 {% extends "navbar.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contact_us.css') }}">
+{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contact_us.css')}}">
-
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
-
-</head>
-<body>
+<div class="contact-container">
     {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flashes">
-    {% for category, message in messages %}
-      <li class="{{ category }}">{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
-<div class="container_mt-5">
-    <h1>Contact Us</h1>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.name.label(class="form-label") }}
-            {{ form.name(class="form-control") }}
-            {% for error in form.name.errors %}
-                <span class="text-danger">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control") }}
-            {% for error in form.email.errors %}
-                <span class="text-danger">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="form-group">
-            {{ form.message.label(class="form-label") }}
-            {{ form.message(class="form-control-msg", rows=5) }}
-            {% for error in form.message.errors %}
-                <span class="text-danger">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="send-btn">
-            <button type="submit" class="btn-btn-primary">{{ form.submit.label }}</button>
-        </div>
-    </form>
+    <div class="contact-card">
+        <h1>Contact Us</h1>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+                {% for error in form.name.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+                {% for error in form.email.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.message.label(class="form-label") }}
+                {{ form.message(class="form-control-msg", rows=5) }}
+                {% for error in form.message.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="send-btn">
+                <button type="submit" class="btn-btn-primary">{{ form.submit.label }}</button>
+            </div>
+        </form>
+    </div>
 </div>
-
 {% endblock %}

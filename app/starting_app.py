@@ -19,6 +19,7 @@ import random
 from datetime import date, timedelta
 
 #sys.path.insert(0, PT_flask)
+
 from datetime import timedelta
 from app.models import (
     Workouts,
@@ -52,6 +53,8 @@ from app.user_functions import user_exists, create_user
 load_dotenv()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["PYTHONPATH"] = os.getenv("PYTHONPATH")
+
 admin = Admin(app, index_view=MyAdminIndexView())
 
 # Email configuration
@@ -67,6 +70,7 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 # app.config["SQLALCHEMY_ECHO"] = True
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 migrate = Migrate(app, db)
+
 db.init_app(app)
 
 # Initialize admin views with error handling
