@@ -20,14 +20,24 @@ def create_user(
     email,
     first_name,
     last_name,
-    password
+    password,
+    goal=None,
+    level=None,
+    role=None,
+    user_routine=None,
 ):
     user = model(
         username=username,
         email=email,
         first_name=first_name,
         last_name=last_name,
-        password=password
+        password=password,
+        goal=goal,
+        level=level,
+        role=role,
+        user_routine=user_routine,
+        days_logged_in=0,
+        routine_change_date=date.today() + timedelta(weeks=6),
     )
     db.session.add(user)
     db.session.commit()
