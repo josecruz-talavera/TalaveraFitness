@@ -306,6 +306,18 @@ def contact_us():
 def setup():
     db.create_all()
 
+    from app.data.info_to_insert import (
+        upper_chest_workouts, mid_chest_workouts, lower_chest_workouts,
+        workouts_for_back, front_delt_workouts, mid_delt_workouts,
+        rear_delt_workouts, workouts_for_tricep, workouts_for_bicep,
+        workouts_for_legs, workouts_for_glutes, workouts_for_groin,
+        workouts_for_quads, workouts_for_hamstrings, workouts_for_calves,
+        upper_abs_workouts, lower_abs_workouts, sixpack_workouts,
+        oblique_workouts, complete_abs_workouts, core_workouts
+    )
+    from app.workout_functions import add_workouts_to_model, list_of_videos
+    from app.data.all_routines import routines
+    from app.models import Routine, Day_of_routine
     # Clear existing data
     db.session.query(Day_of_routine).delete()
     db.session.query(Routine).delete()
