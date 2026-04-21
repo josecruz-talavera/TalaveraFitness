@@ -112,8 +112,8 @@ def add_workouts_to_model(model, workout_names, body_part, muscle_targeted, vide
             workout_name=workout_name,
             body_part=body_part,
             muscle_targeted=muscle_targeted,
-            workout_link=video_to_add_to_model(workout_name, list_of_videos(), "workout_vids"),
-            workout_pic_link=video_to_add_to_model(workout_name, list_of_videos(), "workout_pics"),
+            workout_link=video_to_add_to_model(workout_name, videos, "workout_vids"),
+            workout_pic_link=video_to_add_to_model(workout_name, videos, "workout_pics")
         )
 
         db.session.add(workout)
