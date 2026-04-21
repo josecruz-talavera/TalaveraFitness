@@ -96,10 +96,6 @@ def load_user(user_id):
 
 # new code
 
-@app.route("/setup-db")
-def setup_db():
-    db.create_all()
-    return "Database created!"
 
 @app.route("/video")
 def video():
