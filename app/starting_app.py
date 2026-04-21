@@ -409,14 +409,14 @@ def create_admin():
         email="jcruz6003@gmail.com",
         first_name="Jose",
         last_name="Cruz",
-        password="your-password-here",
+        password="P2p4u1018!",
         role="admin",
         days_logged_in=0
     )
     db.session.add(admin_user)
     db.session.commit()
     return "Admin created!"
-    
+
 if __name__ == "__main__":
     with app.app_context():
         print("Creating database ", db)
