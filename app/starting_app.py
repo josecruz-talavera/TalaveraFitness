@@ -396,6 +396,27 @@ def setup():
 
     return "Database set up and populated successfully!"
 
+@app.route("/create-admin")
+def create_admin():
+    from app.models import User
+    
+    # Check if admin already exists
+    if User.query.filter_by(username="jcruz6003").first():
+        return "Admin already exists!"
+    
+    admin_user = User(
+        username="jcruz6003",
+        email="jcruz6003@gmail.com",
+        first_name="Jose",
+        last_name="Cruz",
+        password="your-password-here",
+        role="admin",
+        days_logged_in=0
+    )
+    db.session.add(admin_user)
+    db.session.commit()
+    return "Admin created!"
+    
 if __name__ == "__main__":
     with app.app_context():
         print("Creating database ", db)
