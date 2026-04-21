@@ -35,5 +35,3 @@ dist/
 build/
 *.egg-info/
 
-#data i use for app
-data/
