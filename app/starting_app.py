@@ -322,29 +322,31 @@ def setup():
     from app.workout_functions import add_workouts_to_model, list_of_videos
     from app.data.all_routines import routines
     from app.models import Routine, Day_of_routine
+# Call list_of_videos ONCE
+    videos = list_of_videos()
 
     # Add workouts
-    add_workouts_to_model(Workouts, upper_chest_workouts, "chest", "upper chest", list_of_videos())
-    add_workouts_to_model(Workouts, mid_chest_workouts, "chest", "mid chest", list_of_videos())
-    add_workouts_to_model(Workouts, lower_chest_workouts, "chest", "lower chest", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_back, "back", None, list_of_videos())
-    add_workouts_to_model(Workouts, front_delt_workouts, "shoulders", "anterior deltoids", list_of_videos())
-    add_workouts_to_model(Workouts, mid_delt_workouts, "shoulders", "mid deltoids", list_of_videos())
-    add_workouts_to_model(Workouts, rear_delt_workouts, "shoulders", "rear deltoids", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_tricep, "arms", "triceps", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_bicep, "arms", "biceps", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_legs, "legs", "fundamental legs", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_glutes, "legs", "glutes", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_groin, "legs", "groin", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_quads, "legs", "quads", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_hamstrings, "legs", "hamstrings", list_of_videos())
-    add_workouts_to_model(Workouts, workouts_for_calves, "legs", "calves", list_of_videos())
-    add_workouts_to_model(Workouts, upper_abs_workouts, "abdomen", "abs", list_of_videos())
-    add_workouts_to_model(Workouts, lower_abs_workouts, "abdomen", "abs", list_of_videos())
-    add_workouts_to_model(Workouts, sixpack_workouts, "abdomen", "abs", list_of_videos())
-    add_workouts_to_model(Workouts, oblique_workouts, "abdomen", "abs", list_of_videos())
-    add_workouts_to_model(Workouts, complete_abs_workouts, "abdomen", "abs", list_of_videos())
-    add_workouts_to_model(Workouts, core_workouts, "abdomen", "abs", list_of_videos())
+    add_workouts_to_model(Workouts, upper_chest_workouts, "chest", "upper chest", videos)
+    add_workouts_to_model(Workouts, mid_chest_workouts, "chest", "mid chest", videos)
+    add_workouts_to_model(Workouts, lower_chest_workouts, "chest", "lower chest", videos)
+    add_workouts_to_model(Workouts, workouts_for_back, "back", None, videos)
+    add_workouts_to_model(Workouts, front_delt_workouts, "shoulders", "anterior deltoids", videos)
+    add_workouts_to_model(Workouts, mid_delt_workouts, "shoulders", "mid deltoids", videos)
+    add_workouts_to_model(Workouts, rear_delt_workouts, "shoulders", "rear deltoids", videos)
+    add_workouts_to_model(Workouts, workouts_for_tricep, "arms", "triceps", videos)
+    add_workouts_to_model(Workouts, workouts_for_bicep, "arms", "biceps", videos)
+    add_workouts_to_model(Workouts, workouts_for_legs, "legs", "fundamental legs", videos)
+    add_workouts_to_model(Workouts, workouts_for_glutes, "legs", "glutes", videos)
+    add_workouts_to_model(Workouts, workouts_for_groin, "legs", "groin", videos)
+    add_workouts_to_model(Workouts, workouts_for_quads, "legs", "quads", videos)
+    add_workouts_to_model(Workouts, workouts_for_hamstrings, "legs", "hamstrings", videos)
+    add_workouts_to_model(Workouts, workouts_for_calves, "legs", "calves", videos)
+    add_workouts_to_model(Workouts, upper_abs_workouts, "abdomen", "abs", videos)
+    add_workouts_to_model(Workouts, lower_abs_workouts, "abdomen", "abs", videos)
+    add_workouts_to_model(Workouts, sixpack_workouts, "abdomen", "abs", videos)
+    add_workouts_to_model(Workouts, oblique_workouts, "abdomen", "abs", videos)
+    add_workouts_to_model(Workouts, complete_abs_workouts, "abdomen", "abs", videos)
+    add_workouts_to_model(Workouts, core_workouts, "abdomen", "abs", videos)
     db.session.commit()
 
     # Add routine names
@@ -375,7 +377,7 @@ def setup():
     db.session.commit()
 
     return "Database set up and populated successfully!"
-    
+
 if __name__ == "__main__":
     with app.app_context():
         print("Creating database ", db)
