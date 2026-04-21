@@ -398,7 +398,7 @@ def setup():
 
 @app.route("/create-admin")
 def create_admin():
-    from app.models import User
+    db.create_all()
     
     # Check if admin already exists
     if User.query.filter_by(username="jcruz6003").first():
