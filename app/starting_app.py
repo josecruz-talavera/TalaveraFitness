@@ -302,7 +302,80 @@ def contact_us():
 
     return render_template("contact_us.html", form=form)
 
+@app.route("/setup")
+def setup():
+    db.create_all()
+    
+    # Only run if database is empty
+    if Workouts.query.first():
+        return "Database already set up!"
+    
+    from app.data.info_to_insert import (
+        upper_chest_workouts, mid_chest_workouts, lower_chest_workouts,
+        workouts_for_back, front_delt_workouts, mid_delt_workouts,
+        rear_delt_workouts, workouts_for_tricep, workouts_for_bicep,
+        workouts_for_legs, workouts_for_glutes, workouts_for_groin,
+        workouts_for_quads, workouts_for_hamstrings, workouts_for_calves,
+        upper_abs_workouts, lower_abs_workouts, sixpack_workouts,
+        oblique_workouts, complete_abs_workouts, core_workouts
+    )
+    from app.workout_functions import add_workouts_to_model, list_of_videos
+    from app.data.all_routines import routines
+    from app.models import Routine, Day_of_routine
 
+    # Add workouts
+    add_workouts_to_model(Workouts, upper_chest_workouts, "chest", "upper chest", list_of_videos())
+    add_workouts_to_model(Workouts, mid_chest_workouts, "chest", "mid chest", list_of_videos())
+    add_workouts_to_model(Workouts, lower_chest_workouts, "chest", "lower chest", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_back, "back", None, list_of_videos())
+    add_workouts_to_model(Workouts, front_delt_workouts, "shoulders", "anterior deltoids", list_of_videos())
+    add_workouts_to_model(Workouts, mid_delt_workouts, "shoulders", "mid deltoids", list_of_videos())
+    add_workouts_to_model(Workouts, rear_delt_workouts, "shoulders", "rear deltoids", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_tricep, "arms", "triceps", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_bicep, "arms", "biceps", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_legs, "legs", "fundamental legs", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_glutes, "legs", "glutes", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_groin, "legs", "groin", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_quads, "legs", "quads", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_hamstrings, "legs", "hamstrings", list_of_videos())
+    add_workouts_to_model(Workouts, workouts_for_calves, "legs", "calves", list_of_videos())
+    add_workouts_to_model(Workouts, upper_abs_workouts, "abdomen", "abs", list_of_videos())
+    add_workouts_to_model(Workouts, lower_abs_workouts, "abdomen", "abs", list_of_videos())
+    add_workouts_to_model(Workouts, sixpack_workouts, "abdomen", "abs", list_of_videos())
+    add_workouts_to_model(Workouts, oblique_workouts, "abdomen", "abs", list_of_videos())
+    add_workouts_to_model(Workouts, complete_abs_workouts, "abdomen", "abs", list_of_videos())
+    add_workouts_to_model(Workouts, core_workouts, "abdomen", "abs", list_of_videos())
+    db.session.commit()
+
+    # Add routine names
+    for routine_name in routines:
+        if not Routine.query.filter_by(routine_name=routine_name).first():
+            routine = Routine(routine_name=routine_name)
+            db.session.add(routine)
+    db.session.commit()
+
+    # Add routine days
+    for routine_name in routines:
+        for workout_day in routines[routine_name]:
+            if not Day_of_routine.query.filter_by(workout_day_name=workout_day, routine_name=routine_name).first():
+                workouts_list = routines[routine_name][workout_day]
+                d = Day_of_routine(
+                    workout_day_name=workout_day,
+                    w1=workouts_list[0] if len(workouts_list) > 0 else None,
+                    w2=workouts_list[1] if len(workouts_list) > 1 else None,
+                    w3=workouts_list[2] if len(workouts_list) > 2 else None,
+                    w4=workouts_list[3] if len(workouts_list) > 3 else None,
+                    w5=workouts_list[4] if len(workouts_list) > 4 else None,
+                    w6=workouts_list[5] if len(workouts_list) > 5 else None,
+                    w7=workouts_list[6] if len(workouts_list) > 6 else None,
+                    w8=workouts_list[7] if len(workouts_list) > 7 else None,
+                    routine_name=routine_name,
+                )
+                db.session.add(d)
+    db.session.commit()
+
+    return "Database set up and populated successfully!"
+    
 if __name__ == "__main__":
     with app.app_context():
         print("Creating database ", db)
