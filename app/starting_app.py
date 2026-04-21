@@ -305,6 +305,12 @@ def contact_us():
 @app.route("/setup")
 def setup():
     db.create_all()
+
+    # Clear existing data
+    db.session.query(Day_of_routine).delete()
+    db.session.query(Routine).delete()
+    db.session.query(Workouts).delete()
+    db.session.commit()
     
     # Only run if database is empty
     if Workouts.query.first():
