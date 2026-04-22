@@ -72,6 +72,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 migrate = Migrate(app, db)
 
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 # Initialize admin views with error handling
 try:
@@ -406,10 +408,10 @@ def create_admin():
     
     admin_user = User(
         username="jcruz6003",
-        email="jcruz6003@gmail.com",
+        email="jcruz@gmail.com",
         first_name="Jose",
         last_name="Cruz",
-        password="P2p4u1018!",
+        password="loka1234",
         role="admin",
         days_logged_in=0
     )
