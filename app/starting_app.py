@@ -193,7 +193,7 @@ def create_account():
             return redirect(url_for("login"))
 
         else:
-            routine = Routine.query.filter_by(id=1).all()
+            routine = Routine.query.all()
 
             assigned_routine = random.choice(routine)
 
