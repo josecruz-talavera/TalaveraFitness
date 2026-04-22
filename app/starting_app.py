@@ -326,9 +326,7 @@ def setup():
     db.session.query(Workouts).delete()
     db.session.commit()
     
-    # Only run if database is empty
-    if Workouts.query.first():
-        return "Database already set up!"
+  
     
     from app.data.info_to_insert import (
         upper_chest_workouts, mid_chest_workouts, lower_chest_workouts,
