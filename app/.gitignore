@@ -35,3 +35,4 @@ dist/
 build/
 *.egg-info/
 
+tests/
