@@ -204,7 +204,7 @@ class Routine(db.Model):
     # routine could store just the day model
     __tablename__ = "routine"
     id = db.Column(db.Integer, primary_key=True)
-    routine_name = db.Column(db.String)
+    routine_name = db.Column(db.String, unique=True)
     workouts = db.relationship("Day_of_routine", backref="routine")
     routine_level = db.Column(db.String, nullable=True)
     users_with_routine = db.relationship("User", backref="routine")
