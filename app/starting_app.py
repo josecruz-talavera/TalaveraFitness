@@ -407,11 +407,11 @@ def create_admin():
         return "Admin already exists!"
     
     admin_user = User(
-        username="jcruz6003",
+        username="jcruz",
         email="jcruz@gmail.com",
         first_name="Jose",
         last_name="Cruz",
-        password="loka1234",
+        password="P2p4u1018!",
         role="admin",
         days_logged_in=0
     )
