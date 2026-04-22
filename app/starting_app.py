@@ -13,12 +13,12 @@ from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
 
-#PT_flask = os.environ["PWD"]
+# PT_flask = os.environ["PWD"]
 import sys
 import random
 from datetime import date, timedelta
 
-#sys.path.insert(0, PT_flask)
+# sys.path.insert(0, PT_flask)
 
 from datetime import timedelta
 from app.models import (
@@ -64,7 +64,7 @@ app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
 app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USE_SSL"] = False
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 
 # app.config["SQLALCHEMY_ECHO"] = True
@@ -115,7 +115,7 @@ def play_video():
         if request.method == "POST":
             return redirect(url_for("day"))
         else:
-            
+
             return render_template(
                 "play_video.html",
                 video_url=video_url,
@@ -142,9 +142,9 @@ def login():
 
             if user.role == None:
                 routine = Routine.query.filter_by(id=user.user_routine).first()
-                
+
                 session["beginning_day"] = routine.workouts[0].id
-                
+
                 user.days_logged_in += 1
                 db.session.commit()
                 flash("Login succesful!")
@@ -185,8 +185,8 @@ def create_account():
         first_name = request.form["first_name"]
         last_name = request.form["last_name"]
         password = request.form["password"]
-        #goal = request.form["goal"]
-        #level = request.form["level"]
+        # goal = request.form["goal"]
+        # level = request.form["level"]
 
         if user_exists(User, username):
             flash("You already have an account")
@@ -194,7 +194,7 @@ def create_account():
 
         else:
             routine = Routine.query.filter_by(id=1).all()
-            
+
             assigned_routine = random.choice(routine)
 
             create_user(
@@ -225,7 +225,6 @@ def logout():
 
 @app.route("/about_me")
 def about_me():
-    
 
     return render_template("about_me.html", about_me_vid=about_me_loop_vid("push ups"))
 
@@ -233,11 +232,13 @@ def about_me():
 @app.route("/routine", methods=["POST", "GET"])
 def routine():
     if "user_id" in session:
-        
+
         routines = Routine.query.filter_by(id=session["user_id"]).first()
-        
-        routines1 = routine_with_videos(User.query.filter_by(id=session["user_id"]).first(), Workouts.query.all())
-        
+
+        routines1 = routine_with_videos(
+            User.query.filter_by(id=session["user_id"]).first(), Workouts.query.all()
+        )
+
         return render_template("routine.html", routine_days=routines1)
     else:
         return redirect(url_for("login"))
@@ -251,12 +252,10 @@ def day():
         if user.current_day_id == None:
             user.current_day_id = session["beginning_day"]
             db.session.commit()
-        
+
         day = Day_of_routine.query.filter_by(id=user.current_day_id).first()
         workout_day = add_links_to_routine_days(day, Workouts.query.all())
-        
-        
-        
+
         return render_template(
             "day.html", workout_day=workout_day, day=day.workout_day_name
         )
@@ -293,7 +292,7 @@ def contact_us():
                 subject="Contact form submission",
                 sender=form.email.data,
                 recipients=["jcruz6003@gmail.com"],
-                body=f"Message from: {form.name.data}\nEmail: {form.email.data}\n\nMessage:\n{form.message.data}"
+                body=f"Message from: {form.name.data}\nEmail: {form.email.data}\n\nMessage:\n{form.message.data}",
             )
             mail.send(msg)
             flash("Message sent successfully!", "success")
@@ -304,60 +303,101 @@ def contact_us():
 
     return render_template("contact_us.html", form=form)
 
-@app.route("/setup")
-def setup():
-    db.create_all()
 
-    from app.data.info_to_insert import (
-        upper_chest_workouts, mid_chest_workouts, lower_chest_workouts,
-        workouts_for_back, front_delt_workouts, mid_delt_workouts,
-        rear_delt_workouts, workouts_for_tricep, workouts_for_bicep,
-        workouts_for_legs, workouts_for_glutes, workouts_for_groin,
-        workouts_for_quads, workouts_for_hamstrings, workouts_for_calves,
-        upper_abs_workouts, lower_abs_workouts, sixpack_workouts,
-        oblique_workouts, complete_abs_workouts, core_workouts
-    )
-    from app.workout_functions import add_workouts_to_model, list_of_videos
+@app.route("/setup-routines")
+def setup_routines():
+    db.create_all()
     from app.data.all_routines import routines
     from app.models import Routine, Day_of_routine
-    # Clear existing data
+
     db.session.query(Day_of_routine).delete()
     db.session.query(Routine).delete()
-    db.session.query(Workouts).delete()
     db.session.commit()
-    
-  
-    
+
+    for routine_name in routines:
+        routine = Routine(routine_name=routine_name)
+        db.session.add(routine)
+    db.session.commit()
+
+    for routine_name in routines:
+        for workout_day in routines[routine_name]:
+            workouts_list = routines[routine_name][workout_day]
+            d = Day_of_routine(
+                workout_day_name=workout_day,
+                w1=workouts_list[0] if len(workouts_list) > 0 else None,
+                w2=workouts_list[1] if len(workouts_list) > 1 else None,
+                w3=workouts_list[2] if len(workouts_list) > 2 else None,
+                w4=workouts_list[3] if len(workouts_list) > 3 else None,
+                w5=workouts_list[4] if len(workouts_list) > 4 else None,
+                w6=workouts_list[5] if len(workouts_list) > 5 else None,
+                w7=workouts_list[6] if len(workouts_list) > 6 else None,
+                w8=workouts_list[7] if len(workouts_list) > 7 else None,
+                routine_name=routine_name,
+            )
+            db.session.add(d)
+    db.session.commit()
+    return "Routines set up successfully!"
+
+
+@app.route("/setup-workouts")
+def setup_workouts():
     from app.data.info_to_insert import (
-        upper_chest_workouts, mid_chest_workouts, lower_chest_workouts,
-        workouts_for_back, front_delt_workouts, mid_delt_workouts,
-        rear_delt_workouts, workouts_for_tricep, workouts_for_bicep,
-        workouts_for_legs, workouts_for_glutes, workouts_for_groin,
-        workouts_for_quads, workouts_for_hamstrings, workouts_for_calves,
-        upper_abs_workouts, lower_abs_workouts, sixpack_workouts,
-        oblique_workouts, complete_abs_workouts, core_workouts
+        upper_chest_workouts,
+        mid_chest_workouts,
+        lower_chest_workouts,
+        workouts_for_back,
+        front_delt_workouts,
+        mid_delt_workouts,
+        rear_delt_workouts,
+        workouts_for_tricep,
+        workouts_for_bicep,
+        workouts_for_legs,
+        workouts_for_glutes,
+        workouts_for_groin,
+        workouts_for_quads,
+        workouts_for_hamstrings,
+        workouts_for_calves,
+        upper_abs_workouts,
+        lower_abs_workouts,
+        sixpack_workouts,
+        oblique_workouts,
+        complete_abs_workouts,
+        core_workouts,
     )
     from app.workout_functions import add_workouts_to_model, list_of_videos
-    from app.data.all_routines import routines
-    from app.models import Routine, Day_of_routine
-# Call list_of_videos ONCE
-    videos = list_of_videos()
 
-    # Add workouts
-    add_workouts_to_model(Workouts, upper_chest_workouts, "chest", "upper chest", videos)
+    db.session.query(Workouts).delete()
+    db.session.commit()
+
+    videos = list_of_videos()
+    add_workouts_to_model(
+        Workouts, upper_chest_workouts, "chest", "upper chest", videos
+    )
     add_workouts_to_model(Workouts, mid_chest_workouts, "chest", "mid chest", videos)
-    add_workouts_to_model(Workouts, lower_chest_workouts, "chest", "lower chest", videos)
+    add_workouts_to_model(
+        Workouts, lower_chest_workouts, "chest", "lower chest", videos
+    )
     add_workouts_to_model(Workouts, workouts_for_back, "back", None, videos)
-    add_workouts_to_model(Workouts, front_delt_workouts, "shoulders", "anterior deltoids", videos)
-    add_workouts_to_model(Workouts, mid_delt_workouts, "shoulders", "mid deltoids", videos)
-    add_workouts_to_model(Workouts, rear_delt_workouts, "shoulders", "rear deltoids", videos)
+    add_workouts_to_model(
+        Workouts, front_delt_workouts, "shoulders", "anterior deltoids", videos
+    )
+    add_workouts_to_model(
+        Workouts, mid_delt_workouts, "shoulders", "mid deltoids", videos
+    )
+    add_workouts_to_model(
+        Workouts, rear_delt_workouts, "shoulders", "rear deltoids", videos
+    )
     add_workouts_to_model(Workouts, workouts_for_tricep, "arms", "triceps", videos)
     add_workouts_to_model(Workouts, workouts_for_bicep, "arms", "biceps", videos)
-    add_workouts_to_model(Workouts, workouts_for_legs, "legs", "fundamental legs", videos)
+    add_workouts_to_model(
+        Workouts, workouts_for_legs, "legs", "fundamental legs", videos
+    )
     add_workouts_to_model(Workouts, workouts_for_glutes, "legs", "glutes", videos)
     add_workouts_to_model(Workouts, workouts_for_groin, "legs", "groin", videos)
     add_workouts_to_model(Workouts, workouts_for_quads, "legs", "quads", videos)
-    add_workouts_to_model(Workouts, workouts_for_hamstrings, "legs", "hamstrings", videos)
+    add_workouts_to_model(
+        Workouts, workouts_for_hamstrings, "legs", "hamstrings", videos
+    )
     add_workouts_to_model(Workouts, workouts_for_calves, "legs", "calves", videos)
     add_workouts_to_model(Workouts, upper_abs_workouts, "abdomen", "abs", videos)
     add_workouts_to_model(Workouts, lower_abs_workouts, "abdomen", "abs", videos)
@@ -366,56 +406,30 @@ def setup():
     add_workouts_to_model(Workouts, complete_abs_workouts, "abdomen", "abs", videos)
     add_workouts_to_model(Workouts, core_workouts, "abdomen", "abs", videos)
     db.session.commit()
+    return "Workouts set up successfully!"
 
-    # Add routine names
-    for routine_name in routines:
-        if not Routine.query.filter_by(routine_name=routine_name).first():
-            routine = Routine(routine_name=routine_name)
-            db.session.add(routine)
-    db.session.commit()
-
-    # Add routine days
-    for routine_name in routines:
-        for workout_day in routines[routine_name]:
-            if not Day_of_routine.query.filter_by(workout_day_name=workout_day, routine_name=routine_name).first():
-                workouts_list = routines[routine_name][workout_day]
-                d = Day_of_routine(
-                    workout_day_name=workout_day,
-                    w1=workouts_list[0] if len(workouts_list) > 0 else None,
-                    w2=workouts_list[1] if len(workouts_list) > 1 else None,
-                    w3=workouts_list[2] if len(workouts_list) > 2 else None,
-                    w4=workouts_list[3] if len(workouts_list) > 3 else None,
-                    w5=workouts_list[4] if len(workouts_list) > 4 else None,
-                    w6=workouts_list[5] if len(workouts_list) > 5 else None,
-                    w7=workouts_list[6] if len(workouts_list) > 6 else None,
-                    w8=workouts_list[7] if len(workouts_list) > 7 else None,
-                    routine_name=routine_name,
-                )
-                db.session.add(d)
-    db.session.commit()
-
-    return "Database set up and populated successfully!"
 
 @app.route("/create-admin")
 def create_admin():
     db.create_all()
-    
+
     # Check if admin already exists
     if User.query.filter_by(username="jcruz6003").first():
         return "Admin already exists!"
-    
+
     admin_user = User(
         username="jcruz",
         email="jcruz@gmail.com",
         first_name="Jose",
         last_name="Cruz",
-        password="P2p4u1018!",
+        password=os.getenv("ADMIN_PASSWORD"),
         role="admin",
-        days_logged_in=0
+        days_logged_in=0,
     )
     db.session.add(admin_user)
     db.session.commit()
     return "Admin created!"
+
 
 if __name__ == "__main__":
     with app.app_context():
