@@ -104,11 +104,11 @@ body {
 /* Media query for mobile devices */
 @media screen and (max-width: 599px) {
     body {
-        padding-top: 55px;
+        padding-top: 65px;
     }
     
     .navbar {
-        height: 50px;
+        height: 65px;
     }
     
     .navbar .brand {
@@ -135,8 +135,8 @@ body {
 
     .navbar .icon {
         display: block;
-        font-size: 1.3rem;
-        padding: 10px 14px;
+        font-size: 2rem;
+        padding: 12px 18px;
     }
 
     .navbar .menu a {
@@ -183,11 +183,11 @@ body {
 /* Small mobile devices */
 @media screen and (max-width: 480px) {
     body {
-        padding-top: 50px;
+        padding-top: 65px;
     }
     
     .navbar {
-        height: 45px;
+        height: 65px;
     }
     
     .navbar .brand {
@@ -201,8 +201,8 @@ body {
     }
     
     .navbar .icon {
-        font-size: 1.2rem;
-        padding: 8px 12px;
+        font-size: 2rem;
+        padding: 12px 18px;
     }
 }
 

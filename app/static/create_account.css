@@ -24,15 +24,15 @@ h1 {
 }
 
 .create-account-btn, .login-btn {
-    padding: 16px 32px;
+    padding: 30px 40px;
     font-size: 24px;
     margin-bottom: 15px;
     border: none;
     border-radius: 5px;
-    background-color: black;
-    color: white;
+    background: rgba(52, 152, 219, 0.85);
+    color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
@@ -40,8 +40,8 @@ h1 {
 
 .create-account-btn:hover, .login-btn:hover,
 .create-account-btn:active, .login-btn:active {
-    background-color: grey;
-    color: white;
+    background: var(--accent-hover);
+    color: var(--text-primary);
 }
 
 .login-link, .create-account-link {
@@ -70,7 +70,7 @@ h1 {
 
     .create-account-btn, .login-btn {
         font-size: 14px;
-        padding: 12px 24px;
+        padding: 8px 16px;
         margin: 10px auto;
         display: block;
         width: 80%;

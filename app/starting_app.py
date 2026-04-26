@@ -147,7 +147,7 @@ def login():
 
                 user.days_logged_in += 1
                 db.session.commit()
-                flash("Login succesful!")
+    
                 if date(2024, 10, 23) > user.routine_change_date:
 
                     user.routine_change_date = date.today() + timedelta(weeks=6)

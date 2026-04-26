@@ -80,18 +80,19 @@ h1 {
 }
 
 .btn-btn-primary {
-    padding: 14px 28px;
-    font-size: 20px;
+    padding: 30px 40px;
+    font-size: 24px;
     border: none;
-    border-radius: 8px;
-    background-color: #000000;
-    color: #ffffff;
+    border-radius: 5px;
+    background: rgba(52, 152, 219, 0.85);
+    color: var(--text-primary);
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .btn-btn-primary:hover {
-    background-color: #5f5f5f;
+    background: var(--accent-hover);
+    color: var(--text-primary);
     transform: translateY(-1px);
 }
 
@@ -147,7 +148,7 @@ h1 {
     }
 
     .btn-btn-primary {
-        font-size: 16px;
-        padding: 10px 18px;
+        font-size: 14px;
+        padding: 8px 16px;
     }
 }
