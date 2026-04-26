@@ -34,6 +34,7 @@ p{
     flex-direction: column;
     text-align: center;
     align-items: center;
+    margin-bottom: 40px;
 
     
 
@@ -174,6 +175,9 @@ p{
     .exercise-reps {
         font-size: 0.8rem; /* Smaller text on mobile */
         margin: 2px 0;
+    }
+    #complete-btn {
+        margin-bottom: 60px;
     }
 }
 
