@@ -196,6 +196,7 @@ def create_account():
             routine = Routine.query.all()
 
             assigned_routine = random.choice(routine)
+            beginning_day_id = assigned_routine.workouts[0].id if assigned_routine.workouts else None
 
             create_user(
                 User,
@@ -207,6 +208,7 @@ def create_account():
                 None,
                 None,
                 user_routine=assigned_routine.id,
+                beginning_day_id=beginning_day_id,
             )
             flash("Account was created")
             return redirect(url_for("login"))
@@ -250,7 +252,7 @@ def day():
         user = User.query.filter_by(id=session["user_id"]).first()
 
         if user.current_day_id == None:
-            user.current_day_id = session["beginning_day"]
+            user.current_day_id = user.beginning_day_id or session.get("beginning_day")
             db.session.commit()
 
         day = Day_of_routine.query.filter_by(id=user.current_day_id).first()

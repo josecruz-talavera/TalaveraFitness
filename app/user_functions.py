@@ -25,6 +25,7 @@ def create_user(
     level=None,
     role=None,
     user_routine=None,
+    beginning_day_id=None,
 ):
     user = model(
         username=username,
@@ -38,6 +39,8 @@ def create_user(
         user_routine=user_routine,
         days_logged_in=0,
         routine_change_date=date.today() + timedelta(weeks=6),
+        beginning_day_id=beginning_day_id,
+        current_day_id=beginning_day_id,
     )
     db.session.add(user)
     db.session.commit()
