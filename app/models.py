@@ -80,6 +80,8 @@ class User(UserMixin, db.Model):
     days_logged_in = db.Column(db.Integer)
     user_routine = db.Column(db.Integer, db.ForeignKey("routine.id"))
     progress = db.relationship("UserProgress", back_populates="user", lazy=True)
+    def __repr__(self):
+        return self.username
 
 
 class UserForm(Form):
@@ -208,6 +210,8 @@ class Routine(db.Model):
     workouts = db.relationship("Day_of_routine", backref="routine")
     routine_level = db.Column(db.String, nullable=True)
     users_with_routine = db.relationship("User", backref="routine")
+    def __repr__(self):
+        return self.routine_name
 
 
 class Day_of_routine(db.Model):
@@ -226,6 +230,8 @@ class Day_of_routine(db.Model):
     w8 = db.Column(db.String, nullable=True)
 
     routine_name = db.Column(db.String, db.ForeignKey("routine.routine_name"))
+    def __repr__(self):
+        return self.workout_day_name
 
 
 class RoutineForm(Form):
