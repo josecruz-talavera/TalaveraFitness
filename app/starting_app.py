@@ -161,7 +161,11 @@ def login():
                         if choice != user.user_routine:
 
                             user.user_routine = choice
-
+                                # Get the new routine's first day
+                            new_routine = Routine.query.filter_by(id=choice).first()
+                            user.beginning_day_id = new_routine.workouts[0].id
+                            user.current_day_id = new_routine.workouts[0].id  # reset to new routine's day 1
+                            session["beginning_day"] = user.beginning_day_id
                             break
 
                     db.session.commit()
@@ -251,35 +255,43 @@ def day():
     if "user_id" in session:
         user = User.query.filter_by(id=session["user_id"]).first()
 
-        if user.current_day_id == None:
-            user.current_day_id = user.beginning_day_id or session.get("beginning_day")
+        # Guard: check routine exists
+        routine = Routine.query.filter_by(id=user.user_routine).first()
+        if routine is None or len(routine.workouts) == 0:
+            flash("No routine assigned. Please contact support.")
+            return redirect(url_for("login"))
+
+        # Get valid day IDs for current routine
+        valid_day_ids = [d.id for d in routine.workouts]
+
+        # If current_day_id is None or belongs to old routine, reset it
+        if user.current_day_id is None or user.current_day_id not in valid_day_ids:
+            user.current_day_id = user.beginning_day_id
             db.session.commit()
 
         day = Day_of_routine.query.filter_by(id=user.current_day_id).first()
-        workout_day = add_links_to_routine_days(day, Workouts.query.all())
+        if day is None:
+            user.current_day_id = routine.workouts[0].id
+            db.session.commit()
+            day = Day_of_routine.query.filter_by(id=user.current_day_id).first()
 
-        return render_template(
-            "day.html", workout_day=workout_day, day=day.workout_day_name
-        )
+        workout_day = add_links_to_routine_days(day, Workouts.query.all())
+        return render_template("day.html", workout_day=workout_day, day=day.workout_day_name)
     else:
         return redirect(url_for("login"))
 
 
 @app.route("/change_day_id", methods=["POST", "GET"])
 def change_day_id():
-
     user = User.query.filter_by(id=session["user_id"]).first()
     routine = Routine.query.filter_by(id=user.user_routine).first()
 
-    if user.current_day_id >= routine.workouts[0].id + 3:
-        user.current_day_id = routine.workouts[0].id
+    last_day_id = routine.workouts[-1].id  # dynamic, works for any routine length
+
+    if user.current_day_id >= last_day_id:
+        user.current_day_id = user.beginning_day_id  # reset to beginning
     else:
-        user.current_day_id = user.current_day_id + 1
-    # we will be adding a for loop right here
-    # the day_id should be user.current_day_id
-    # day_id = request.form["day_id"]
-    # sets = request.form["sets"]
-    # reps = request.form["reps"]
+        user.current_day_id += 1
 
     db.session.commit()
     return redirect(url_for("day"))
