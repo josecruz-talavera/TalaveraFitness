@@ -12,6 +12,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask import Flask, redirect, render_template, request, flash, url_for, session
 from wtforms import PasswordField, StringField, Form, IntegerField, DateField
 from wtforms.validators import DataRequired, Email, Optional
+from wtforms_sqlalchemy.fields import QuerySelectField
 from datetime import date, timedelta
 
 db = SQLAlchemy()
@@ -217,8 +218,29 @@ class RoutineDaysForm(Form):
 
 
 class RoutineDaysView(ModelView):
-    column_list = ["routine_id", "day_id"]
-    form = RoutineDaysForm
+    column_list = ["routine_id", "day_id", "routine_name", "day_name"]
+    
+    # Show names instead of IDs in the list
+    column_labels = {
+        "routine_id": "Routine",
+        "day_id": "Day",
+    }
+
+    # Add a searchable dropdown for routine and day
+    form_extra_fields = {
+        "routine_id": QuerySelectField(
+            "Routine",
+            query_factory=lambda: Routine.query.all(),
+            get_label="routine_name",
+            allow_blank=False
+        ),
+        "day_id": QuerySelectField(
+            "Day",
+            query_factory=lambda: Day_of_routine.query.all(),
+            get_label="workout_day_name",
+            allow_blank=False
+        )
+    }
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.role == "admin"
