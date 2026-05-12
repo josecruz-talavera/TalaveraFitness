@@ -205,6 +205,26 @@ routine_days = db.Table('routine_days',
     db.Column('routine_id', db.Integer, db.ForeignKey('routine.id'), primary_key=True),
     db.Column('day_id', db.Integer, db.ForeignKey('day_of_routine.id'), primary_key=True)
 )
+class RoutineDays(db.Model):
+    __table__ = routine_days
+
+    def __repr__(self):
+        return f"Routine {self.routine_id} → Day {self.day_id}"
+
+class RoutineDaysForm(Form):
+    routine_id = IntegerField('Routine ID', validators=[DataRequired()])
+    day_id = IntegerField('Day ID', validators=[DataRequired()])
+
+
+class RoutineDaysView(ModelView):
+    column_list = ["routine_id", "day_id"]
+    form = RoutineDaysForm
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.role == "admin"
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for("login"))
 class Routine(db.Model):
     __tablename__ = "routine"
     id = db.Column(db.Integer, primary_key=True)
@@ -291,7 +311,6 @@ class DayView(ModelView):
         "w6",
         "w7",
         "w8",
-        "routine_name",
     ]
     form = DayForm
 

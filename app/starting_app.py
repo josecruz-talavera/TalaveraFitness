@@ -37,6 +37,8 @@ from app.models import (
     Admin,
     AdminView,
     MyAdminIndexView,
+    RoutineDays,
+    RoutineDaysView,
 )
 from app.data.info_to_insert import *
 from app.workout_functions import (
@@ -82,6 +84,7 @@ try:
     admin.add_view(DayView(Day_of_routine, db.session))
     admin.add_view(WorkoutsView(Workouts, db.session))
     admin.add_view(UserProgressView(UserProgress, db.session))
+    admin.add_view(RoutineDaysView(RoutineDays, db.session))
 except Exception as e:
     print(f"Error initializing admin views: {str(e)}")
 
