@@ -28,15 +28,22 @@ class Workouts(db.Model):
 
 
 class WorkoutForm(Form):
-    workout_name = StringField('Workout Name', validators=[DataRequired()])
-    body_part = StringField('Body Part', validators=[DataRequired()])
-    muscle_targeted = StringField('Muscle Targeted', validators=[Optional()])
-    workout_link = StringField('Workout Link', validators=[Optional()])
-    workout_pic_link = StringField('Workout PIC', validators=[Optional()])
+    workout_name = StringField("Workout Name", validators=[DataRequired()])
+    body_part = StringField("Body Part", validators=[DataRequired()])
+    muscle_targeted = StringField("Muscle Targeted", validators=[Optional()])
+    workout_link = StringField("Workout Link", validators=[Optional()])
+    workout_pic_link = StringField("Workout PIC", validators=[Optional()])
 
 
 class WorkoutsView(ModelView):
-    column_list = ["id", "workout_name", "body_part", "muscle_targeted", "workout_link", "workout_pic_link"]
+    column_list = [
+        "id",
+        "workout_name",
+        "body_part",
+        "muscle_targeted",
+        "workout_link",
+        "workout_pic_link",
+    ]
     column_searchable_list = ["workout_name", "muscle_targeted"]
     form = WorkoutForm
 
@@ -81,24 +88,25 @@ class User(UserMixin, db.Model):
     days_logged_in = db.Column(db.Integer)
     user_routine = db.Column(db.Integer, db.ForeignKey("routine.id"))
     progress = db.relationship("UserProgress", back_populates="user", lazy=True)
+
     def __repr__(self):
         return self.username
 
 
 class UserForm(Form):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    first_name = StringField('First Name', validators=[DataRequired()])
-    last_name = StringField('Last Name', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    role = StringField('Role', validators=[Optional()])
-    level = StringField('Level', validators=[Optional()])
-    user_routine = IntegerField('User Routine', validators=[Optional()])
-    days_logged_in = IntegerField('Days Logged In', validators=[Optional()])
-    routine_change_date = DateField('Routine Change Date', validators=[Optional()])
-    goal = StringField('Goal', validators=[Optional()])
-    beginning_day_id = IntegerField('Beginning Day ID', validators=[Optional()])
-    current_day_id = IntegerField('Current Day ID', validators=[Optional()])
+    username = StringField("Username", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    first_name = StringField("First Name", validators=[DataRequired()])
+    last_name = StringField("Last Name", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    role = StringField("Role", validators=[Optional()])
+    level = StringField("Level", validators=[Optional()])
+    user_routine = IntegerField("User Routine", validators=[Optional()])
+    days_logged_in = IntegerField("Days Logged In", validators=[Optional()])
+    routine_change_date = DateField("Routine Change Date", validators=[Optional()])
+    goal = StringField("Goal", validators=[Optional()])
+    beginning_day_id = IntegerField("Beginning Day ID", validators=[Optional()])
+    current_day_id = IntegerField("Current Day ID", validators=[Optional()])
 
 
 class UserView(ModelView):
@@ -113,9 +121,9 @@ class UserView(ModelView):
         "level",
         "days_logged_in",
         "routine_change_date",
-        "progress"
+        "progress",
     ]
-    
+
     form = UserForm
 
     def is_accessible(self):
@@ -154,12 +162,12 @@ class UserProgress(db.Model):
     reps = db.Column(db.Integer)
     weight_lifted = db.Column(db.Integer)
     date = db.Column(db.Date)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = db.relationship("User", back_populates="progress")
 
 
 class UserProgressForm(Form):
-    sets = IntegerField('Sets', validators=[DataRequired()])
+    sets = IntegerField("Sets", validators=[DataRequired()])
 
 
 class UserProgressView(ModelView):
@@ -202,24 +210,30 @@ class Test_User(db.Model):
 # each user will have their own routine set up to them
 # here we will store our days for the routines
 
-routine_days = db.Table('routine_days',
-    db.Column('routine_id', db.Integer, db.ForeignKey('routine.id'), primary_key=True),
-    db.Column('day_id', db.Integer, db.ForeignKey('day_of_routine.id'), primary_key=True)
+routine_days = db.Table(
+    "routine_days",
+    db.Column("routine_id", db.Integer, db.ForeignKey("routine.id"), primary_key=True),
+    db.Column(
+        "day_id", db.Integer, db.ForeignKey("day_of_routine.id"), primary_key=True
+    ),
 )
+
+
 class RoutineDays(db.Model):
     __table__ = routine_days
 
     def __repr__(self):
         return f"Routine {self.routine_id} → Day {self.day_id}"
 
+
 class RoutineDaysForm(Form):
-    routine_id = IntegerField('Routine ID', validators=[DataRequired()])
-    day_id = IntegerField('Day ID', validators=[DataRequired()])
+    routine_id = IntegerField("Routine ID", validators=[DataRequired()])
+    day_id = IntegerField("Day ID", validators=[DataRequired()])
 
 
 class RoutineDaysView(ModelView):
     column_list = ["routine_id", "day_id", "routine_name", "day_name"]
-    
+
     # Show names instead of IDs in the list
     column_labels = {
         "routine_id": "Routine",
@@ -232,14 +246,14 @@ class RoutineDaysView(ModelView):
             "Routine",
             query_factory=lambda: Routine.query.all(),
             get_label="routine_name",
-            allow_blank=False
+            allow_blank=False,
         ),
         "day_id": QuerySelectField(
             "Day",
             query_factory=lambda: Day_of_routine.query.all(),
             get_label="workout_day_name",
-            allow_blank=False
-        )
+            allow_blank=False,
+        ),
     }
 
     def is_accessible(self):
@@ -247,12 +261,16 @@ class RoutineDaysView(ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for("login"))
+
+
 class Routine(db.Model):
     __tablename__ = "routine"
     id = db.Column(db.Integer, primary_key=True)
     routine_name = db.Column(db.String, unique=True)
     routine_level = db.Column(db.String, nullable=True)
-    workouts = db.relationship("Day_of_routine", secondary=routine_days, backref="routines")
+    workouts = db.relationship(
+        "Day_of_routine", secondary=routine_days, backref="routines"
+    )
     users_with_routine = db.relationship("User", backref="routine")
 
     def __repr__(self):
@@ -279,8 +297,8 @@ class Day_of_routine(db.Model):
 
 
 class RoutineForm(Form):
-    routine_name = StringField('Routine Name', validators=[DataRequired()])
-    routine_level = StringField('Routine Level', validators=[DataRequired()])
+    routine_name = StringField("Routine Name", validators=[DataRequired()])
+    routine_level = StringField("Routine Level", validators=[DataRequired()])
 
 
 class RoutineView(ModelView):
@@ -309,16 +327,16 @@ class RoutineView(ModelView):
 
 
 class DayForm(Form):
-    workout_day_name = StringField('Workout Day Name', validators=[DataRequired()])
-    w1 = StringField('Workout 1', validators=[Optional()])
-    w2 = StringField('Workout 2', validators=[Optional()])
-    w3 = StringField('Workout 3', validators=[Optional()])
-    w4 = StringField('Workout 4', validators=[Optional()])
-    w5 = StringField('Workout 5', validators=[Optional()])
-    w6 = StringField('Workout 6', validators=[Optional()])
-    w7 = StringField('Workout 7', validators=[Optional()])
-    w8 = StringField('Workout 8', validators=[Optional()])
-    routine_name = StringField('Routine Name', validators=[DataRequired()])
+    workout_day_name = StringField("Workout Day Name", validators=[DataRequired()])
+    w1 = StringField("Workout 1", validators=[Optional()])
+    w2 = StringField("Workout 2", validators=[Optional()])
+    w3 = StringField("Workout 3", validators=[Optional()])
+    w4 = StringField("Workout 4", validators=[Optional()])
+    w5 = StringField("Workout 5", validators=[Optional()])
+    w6 = StringField("Workout 6", validators=[Optional()])
+    w7 = StringField("Workout 7", validators=[Optional()])
+    w8 = StringField("Workout 8", validators=[Optional()])
+    routine_name = StringField("Routine Name", validators=[DataRequired()])
 
 
 class DayView(ModelView):

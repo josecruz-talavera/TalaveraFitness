@@ -150,7 +150,7 @@ def login():
 
                 user.days_logged_in += 1
                 db.session.commit()
-    
+
                 if date(2024, 10, 23) > user.routine_change_date:
 
                     user.routine_change_date = date.today() + timedelta(weeks=6)
@@ -164,10 +164,12 @@ def login():
                         if choice != user.user_routine:
 
                             user.user_routine = choice
-                                # Get the new routine's first day
+                            # Get the new routine's first day
                             new_routine = Routine.query.filter_by(id=choice).first()
                             user.beginning_day_id = new_routine.workouts[0].id
-                            user.current_day_id = new_routine.workouts[0].id  # reset to new routine's day 1
+                            user.current_day_id = new_routine.workouts[
+                                0
+                            ].id  # reset to new routine's day 1
                             session["beginning_day"] = user.beginning_day_id
                             break
 
@@ -203,7 +205,9 @@ def create_account():
             routine = Routine.query.all()
 
             assigned_routine = random.choice(routine)
-            beginning_day_id = assigned_routine.workouts[0].id if assigned_routine.workouts else None
+            beginning_day_id = (
+                assigned_routine.workouts[0].id if assigned_routine.workouts else None
+            )
 
             create_user(
                 User,
@@ -279,7 +283,9 @@ def day():
             day = Day_of_routine.query.filter_by(id=user.current_day_id).first()
 
         workout_day = add_links_to_routine_days(day, Workouts.query.all())
-        return render_template("day.html", workout_day=workout_day, day=day.workout_day_name)
+        return render_template(
+            "day.html", workout_day=workout_day, day=day.workout_day_name
+        )
     else:
         return redirect(url_for("login"))
 
