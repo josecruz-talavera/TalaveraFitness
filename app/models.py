@@ -201,15 +201,18 @@ class Test_User(db.Model):
 # each user will have their own routine set up to them
 # here we will store our days for the routines
 
-
+routine_days = db.Table('routine_days',
+    db.Column('routine_id', db.Integer, db.ForeignKey('routine.id'), primary_key=True),
+    db.Column('day_id', db.Integer, db.ForeignKey('day_of_routine.id'), primary_key=True)
+)
 class Routine(db.Model):
-    # routine could store just the day model
     __tablename__ = "routine"
     id = db.Column(db.Integer, primary_key=True)
     routine_name = db.Column(db.String, unique=True)
-    workouts = db.relationship("Day_of_routine", backref="routine")
     routine_level = db.Column(db.String, nullable=True)
+    workouts = db.relationship("Day_of_routine", secondary=routine_days, backref="routines")
     users_with_routine = db.relationship("User", backref="routine")
+
     def __repr__(self):
         return self.routine_name
 
@@ -229,7 +232,6 @@ class Day_of_routine(db.Model):
     w7 = db.Column(db.String, nullable=True)
     w8 = db.Column(db.String, nullable=True)
 
-    routine_name = db.Column(db.String, db.ForeignKey("routine.routine_name"))
     def __repr__(self):
         return self.workout_day_name
 
