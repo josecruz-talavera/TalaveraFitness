@@ -90,7 +90,7 @@ class User(UserMixin, db.Model):
     progress = db.relationship("UserProgress", back_populates="user", lazy=True)
 
     def __repr__(self):
-        return self.__dict__.get('username') or f"User {self.__dict__.get('id', '?')}"
+        return self.__dict__.get("username") or f"User {self.__dict__.get('id', '?')}"
 
 
 class UserForm(Form):
@@ -232,15 +232,8 @@ class RoutineDaysForm(Form):
 
 
 class RoutineDaysView(ModelView):
-    column_list = ["routine_id", "day_id", "routine_name", "day_name"]
+    column_list = ["routine_id", "day_id"]
 
-    # Show names instead of IDs in the list
-    column_labels = {
-        "routine_id": "Routine",
-        "day_id": "Day",
-    }
-
-    # Add a searchable dropdown for routine and day
     form_extra_fields = {
         "routine_id": QuerySelectField(
             "Routine",
@@ -255,6 +248,17 @@ class RoutineDaysView(ModelView):
             allow_blank=False,
         ),
     }
+
+    def on_model_change(self, form, model, is_created):
+        try:
+            # Extract the id from the object the dropdown returns
+            model.routine_id = form.routine_id.data.id
+            model.day_id = form.day_id.data.id
+            super().on_model_change(form, model, is_created)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error saving routine day: {str(e)}", "error")
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.role == "admin"
@@ -274,7 +278,10 @@ class Routine(db.Model):
     users_with_routine = db.relationship("User", backref="routine")
 
     def __repr__(self):
-        return self.__dict__.get('routine_name') or f"Routine {self.__dict__.get('id', '?')}"
+        return (
+            self.__dict__.get("routine_name")
+            or f"Routine {self.__dict__.get('id', '?')}"
+        )
 
 
 class Day_of_routine(db.Model):
@@ -293,7 +300,10 @@ class Day_of_routine(db.Model):
     w8 = db.Column(db.String, nullable=True)
 
     def __repr__(self):
-        return self.__dict__.get('workout_day_name') or f"Day {self.__dict__.get('id', '?')}"
+        return (
+            self.__dict__.get("workout_day_name")
+            or f"Day {self.__dict__.get('id', '?')}"
+        )
 
 
 class RoutineForm(Form):
