@@ -90,7 +90,7 @@ class User(UserMixin, db.Model):
     progress = db.relationship("UserProgress", back_populates="user", lazy=True)
 
     def __repr__(self):
-        return self.username or f"User {self.id}"
+        return self.__dict__.get('username') or f"User {self.__dict__.get('id', '?')}"
 
 
 class UserForm(Form):
@@ -274,7 +274,7 @@ class Routine(db.Model):
     users_with_routine = db.relationship("User", backref="routine")
 
     def __repr__(self):
-        return self.routine_name or f"Routine {self.id}"
+        return self.__dict__.get('routine_name') or f"Routine {self.__dict__.get('id', '?')}"
 
 
 class Day_of_routine(db.Model):
@@ -293,7 +293,7 @@ class Day_of_routine(db.Model):
     w8 = db.Column(db.String, nullable=True)
 
     def __repr__(self):
-        return self.workout_day_name or f"Day {self.id}"
+        return self.__dict__.get('workout_day_name') or f"Day {self.__dict__.get('id', '?')}"
 
 
 class RoutineForm(Form):
