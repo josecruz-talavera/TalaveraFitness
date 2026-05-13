@@ -211,7 +211,7 @@ def create_account():
 
             create_user(
                 User,
-                username,
+                username.lower(),
                 email,
                 first_name,
                 last_name,
