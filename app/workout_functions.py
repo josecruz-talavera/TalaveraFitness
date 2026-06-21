@@ -80,12 +80,13 @@ def video_to_add_to_model(workout_name, videos, folder_name):
 
 def add_links_to_routine_days(day, workouts_model):
     routine_workouts = {}
-    
+
     days = [day.w1, day.w2, day.w3, day.w4, day.w5, day.w6, day.w7, day.w8]
-    days = [w for w in days if w]  # filter out None values
+    days = [w for w in days if w]  # drop None/empty slots so we don't show blank rows
 
     for workout in workouts_model:
         if workout.workout_name in days:
+
             routine_workouts[workout.workout_name] = [workout.workout_link, workout.workout_pic_link]
     
     return routine_workouts
@@ -95,8 +96,9 @@ def add_links_to_routine_days(day, workouts_model):
 # and I want each workout to be linked to its video
 def routine_with_videos(user, workouts_model):
     routine_days = {}
-    
+
     for routine_day in user.routine.workouts:
+
         routine_days[routine_day.workout_day_name] = add_links_to_routine_days(
             routine_day, workouts_model
         )

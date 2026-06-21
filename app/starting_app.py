@@ -245,12 +245,9 @@ def about_me():
 @app.route("/routine", methods=["POST", "GET"])
 def routine():
     if "user_id" in session:
+        user = User.query.filter_by(id=session["user_id"]).first()
 
-        routines = Routine.query.filter_by(id=session["user_id"]).first()
-
-        routines1 = routine_with_videos(
-            User.query.filter_by(id=session["user_id"]).first(), Workouts.query.all()
-        )
+        routines1 = routine_with_videos(user, Workouts.query.all())
 
         return render_template("routine.html", routine_days=routines1)
     else:
@@ -295,12 +292,17 @@ def change_day_id():
     user = User.query.filter_by(id=session["user_id"]).first()
     routine = Routine.query.filter_by(id=user.user_routine).first()
 
-    last_day_id = routine.workouts[-1].id  # dynamic, works for any routine length
+    # routine.workouts is now ordered by day_order, so this list reflects
+    # the actual intended day sequence rather than raw id values.
+    day_ids = [d.id for d in routine.workouts]
 
-    if user.current_day_id >= last_day_id:
-        user.current_day_id = user.beginning_day_id  # reset to beginning
+    if user.current_day_id not in day_ids:
+        # current day isn't part of this routine (e.g. stale/old routine) -> reset
+        user.current_day_id = user.beginning_day_id
     else:
-        user.current_day_id += 1
+        current_index = day_ids.index(user.current_day_id)
+        next_index = (current_index + 1) % len(day_ids)  # wraps back to day 1 only after the true last day
+        user.current_day_id = day_ids[next_index]
 
     db.session.commit()
     return redirect(url_for("day"))

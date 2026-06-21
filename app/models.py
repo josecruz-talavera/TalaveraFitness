@@ -216,6 +216,9 @@ routine_days = db.Table(
     db.Column(
         "day_id", db.Integer, db.ForeignKey("day_of_routine.id"), primary_key=True
     ),
+    # Explicit ordering so a routine's days always play back in the intended
+    # sequence, regardless of the day_id values or insertion order.
+    db.Column("day_order", db.Integer, nullable=False, default=0),
 )
 
 
@@ -223,16 +226,17 @@ class RoutineDays(db.Model):
     __table__ = routine_days
 
     def __repr__(self):
-        return f"Routine {self.routine_id} → Day {self.day_id}"
+        return f"Routine {self.routine_id} → Day {self.day_id} (order {self.day_order})"
 
 
 class RoutineDaysForm(Form):
     routine_id = IntegerField("Routine ID", validators=[DataRequired()])
     day_id = IntegerField("Day ID", validators=[DataRequired()])
+    day_order = IntegerField("Day Order", validators=[DataRequired()])
 
 
 class RoutineDaysView(ModelView):
-    column_list = ["routine_id", "day_id"]
+    column_list = ["routine_id", "day_id", "day_order"]
 
     form_extra_fields = {
         "routine_id": QuerySelectField(
@@ -273,7 +277,10 @@ class Routine(db.Model):
     routine_name = db.Column(db.String, unique=True)
     routine_level = db.Column(db.String, nullable=True)
     workouts = db.relationship(
-        "Day_of_routine", secondary=routine_days, backref="routines"
+        "Day_of_routine",
+        secondary=routine_days,
+        backref="routines",
+        order_by=routine_days.c.day_order,
     )
     users_with_routine = db.relationship("User", backref="routine")
 
