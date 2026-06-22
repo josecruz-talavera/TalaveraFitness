@@ -25,6 +25,7 @@ class Workouts(db.Model):
     muscle_targeted = db.Column(db.String, nullable=True)
     workout_link = db.Column(db.String, nullable=True)
     workout_pic_link = db.Column(db.String, nullable=True)
+    description = db.Column(db.String, nullable=True) 
 
 
 class WorkoutForm(Form):
