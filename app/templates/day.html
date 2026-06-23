@@ -20,6 +20,17 @@
                 <h3 class="exercise-title">{{workout[0].title()}}</h3>
                 <p class="exercise-sets">4 sets</p>
                 <p class="exercise-reps">12-15 reps</p>
+
+                {% if workout_day[workout[0]][2] %}
+                <div class="desc-wrapper" onclick="event.preventDefault(); event.stopPropagation(); toggleDesc(this)">
+                    <button type="button" class="desc-btn">
+                        Description <span class="desc-arrow">▾</span>
+                    </button>
+                    <div class="desc-dropdown">
+                        <p>{{ workout_day[workout[0]][2] }}</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </a>
@@ -34,5 +45,13 @@
 </div>
 
 <script src="{{ url_for('static', filename='day.js') }}"></script>
+<script>
+    function toggleDesc(wrapper) {
+        const dropdown = wrapper.querySelector('.desc-dropdown');
+        const arrow = wrapper.querySelector('.desc-arrow');
+        const isOpen = dropdown.classList.toggle('open');
+        arrow.textContent = isOpen ? '▴' : '▾';
+    }
+</script>
 
 {% endblock %}

@@ -205,3 +205,64 @@ p{
     }
 }
 
+
+/* Description dropdown on exercise cards */
+.desc-wrapper {
+    margin-top: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.desc-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.desc-btn:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+.desc-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    padding: 0 12px;
+    text-align: left;
+}
+
+.desc-dropdown.open {
+    max-height: 200px;
+    padding: 10px 12px;
+}
+
+.desc-dropdown p {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+}
+
+@media (max-width: 599px) {
+    .desc-btn {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+    }
+    .desc-dropdown p {
+        font-size: 0.75rem;
+    }
+}
