@@ -114,19 +114,17 @@ def video():
 @app.route("/play", methods=["POST", "GET"])
 def play_video():
     if "user_id" in session:
-        video_url = request.args.get("video_url")
+        video_url = request.args.get(
+            "video_url"
+        )  # Get the video URL from query parameter
         if request.method == "POST":
             return redirect(url_for("day"))
         else:
-            workout_name = filter_video_name(video_url, "workout_vids")
-            workout = Workouts.query.filter_by(workout_name=workout_name).first()
-            description = workout.description if workout else None
 
             return render_template(
                 "play_video.html",
                 video_url=video_url,
-                workout_name=workout_name,
-                description=description,
+                workout_name=filter_video_name(video_url, "workout_vids"),
             )
 
     return redirect(url_for("login"))
@@ -240,6 +238,13 @@ def logout():
     return redirect(url_for("login"))
 
 
+@app.route("/nutrition")
+def nutrition():
+    if "user_id" in session:
+        return render_template("nutrition.html")
+    return redirect(url_for("login"))
+
+
 @app.route("/about_me")
 def about_me():
 
@@ -249,8 +254,13 @@ def about_me():
 @app.route("/routine", methods=["POST", "GET"])
 def routine():
     if "user_id" in session:
-        user = User.query.filter_by(id=session["user_id"]).first()
-        routines1 = routine_with_videos(user, Workouts.query.all())
+
+        routines = Routine.query.filter_by(id=session["user_id"]).first()
+
+        routines1 = routine_with_videos(
+            User.query.filter_by(id=session["user_id"]).first(), Workouts.query.all()
+        )
+
         return render_template("routine.html", routine_days=routines1)
     else:
         return redirect(url_for("login"))
@@ -294,13 +304,12 @@ def change_day_id():
     user = User.query.filter_by(id=session["user_id"]).first()
     routine = Routine.query.filter_by(id=user.user_routine).first()
 
-    day_ids = [d.id for d in routine.workouts]
+    last_day_id = routine.workouts[-1].id  # dynamic, works for any routine length
 
-    if user.current_day_id not in day_ids:
-        user.current_day_id = user.beginning_day_id
+    if user.current_day_id >= last_day_id:
+        user.current_day_id = user.beginning_day_id  # reset to beginning
     else:
-        idx = day_ids.index(user.current_day_id)
-        user.current_day_id = day_ids[(idx + 1) % len(day_ids)]
+        user.current_day_id += 1
 
     db.session.commit()
     return redirect(url_for("day"))

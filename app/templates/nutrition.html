@@ -1,0 +1,274 @@
+{% extends "navbar.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='nutrition.css')}}">
+</head>
+<body>
+<div class="nutrition-container">
+    <h1>Nutrition</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" id="tab-calculator" onclick="switchTab('calculator')">Macro Calculator</button>
+        <button class="tab" id="tab-guide" onclick="switchTab('guide')">Nutrition Guide</button>
+    </div>
+
+    <!-- Calculator Tab -->
+    <div class="tab-content" id="content-calculator">
+        <p class="subtitle">Enter your details to get your personalized daily macro targets</p>
+
+        <div class="calculator-card">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Sex</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" id="btn-male" onclick="setSex('male')">Male</button>
+                        <button class="toggle-btn" id="btn-female" onclick="setSex('female')">Female</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" placeholder="e.g. 25" min="15" max="80">
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight</label>
+                    <div class="input-with-unit">
+                        <input type="number" id="weight" placeholder="e.g. 170">
+                        <div class="unit-toggle">
+                            <button class="unit-btn active" id="btn-lbs" onclick="setUnit('lbs')">lbs</button>
+                            <button class="unit-btn" id="btn-kg" onclick="setUnit('kg')">kg</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Height</label>
+                    <div class="height-inputs" id="height-imperial">
+                        <input type="number" id="feet" placeholder="ft" min="3" max="8">
+                        <input type="number" id="inches" placeholder="in" min="0" max="11">
+                    </div>
+                    <div class="height-inputs" id="height-metric" style="display:none;">
+                        <input type="number" id="cm" placeholder="cm" min="100" max="250">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Activity Level</label>
+                    <select id="activity">
+                        <option value="1.2">Sedentary (little or no exercise)</option>
+                        <option value="1.375">Lightly active (1-3 days/week)</option>
+                        <option value="1.55" selected>Moderately active (3-5 days/week)</option>
+                        <option value="1.725">Very active (6-7 days/week)</option>
+                        <option value="1.9">Extra active (physical job + training)</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Goal</label>
+                    <div class="goal-group">
+                        <button class="goal-btn" id="btn-lose" onclick="setGoal('lose')">
+                            <span class="goal-icon">📉</span>
+                            <span>Lose Weight</span>
+                        </button>
+                        <button class="goal-btn active" id="btn-maintain" onclick="setGoal('maintain')">
+                            <span class="goal-icon">⚖️</span>
+                            <span>Maintain</span>
+                        </button>
+                        <button class="goal-btn" id="btn-gain" onclick="setGoal('gain')">
+                            <span class="goal-icon">📈</span>
+                            <span>Gain Weight</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculate()">Calculate My Macros</button>
+        </div>
+
+        <!-- Results -->
+        <div class="results-card" id="results" style="display:none;">
+            <h2>Your Daily Targets</h2>
+            <div class="calories-display">
+                <span id="total-calories">0</span>
+                <span class="cal-label">calories / day</span>
+            </div>
+
+            <div class="macros-grid">
+                <div class="macro-card protein">
+                    <div class="macro-grams" id="protein-g">0g</div>
+                    <div class="macro-name">Protein</div>
+                    <div class="macro-cals" id="protein-cals">0 kcal</div>
+                    <div class="macro-tip">Builds and repairs muscle</div>
+                </div>
+                <div class="macro-card carbs">
+                    <div class="macro-grams" id="carbs-g">0g</div>
+                    <div class="macro-name">Carbs</div>
+                    <div class="macro-cals" id="carbs-cals">0 kcal</div>
+                    <div class="macro-tip">Primary energy source</div>
+                </div>
+                <div class="macro-card fats">
+                    <div class="macro-grams" id="fats-g">0g</div>
+                    <div class="macro-name">Fats</div>
+                    <div class="macro-cals" id="fats-cals">0 kcal</div>
+                    <div class="macro-tip">Hormones and brain health</div>
+                </div>
+            </div>
+
+            <div class="goal-advice" id="goal-advice"></div>
+
+            <div class="tips-section">
+                <h3>Tips for Success</h3>
+                <div class="tips-grid" id="tips-grid"></div>
+            </div>
+
+            <div class="accuracy-note">
+                <strong>📊 How accurate is this?</strong>
+                <p>This calculator uses the Mifflin-St Jeor formula, accurate within ±10% for most people. Use these numbers as a starting point, eat at these targets for 2–3 weeks, track your weight, then adjust by 100–200 calories as needed.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guide Tab -->
+    <div class="tab-content" id="content-guide" style="display:none;">
+        <p class="subtitle">Everything you need to know about eating for your goals</p>
+
+        <div class="guide-card">
+            <div class="guide-section">
+                <h3>What Are Macros?</h3>
+                <p>Macronutrients — protein, carbohydrates, and fats — are the three categories of nutrients your body uses for energy and function. Every food you eat is made up of some combination of these three. Protein contains 4 calories per gram and is the building block of muscle, enzymes, and hormones. Carbohydrates also contain 4 calories per gram and serve as your body's preferred fuel source, especially during exercise. Fats contain 9 calories per gram and are essential for hormone production, brain health, and absorbing fat-soluble vitamins. None of these are the enemy — all three are necessary, and the goal is getting the right amounts of each.</p>
+            </div>
+
+            <div class="guide-section">
+                <h3>Why Protein Is the Priority</h3>
+                <p>Of the three macros, protein deserves the most attention regardless of your goal. When losing weight, high protein intake preserves the muscle you have so the weight you lose comes from fat, not muscle. When gaining weight, protein provides the raw material your body needs to actually build new muscle tissue — without it, the extra calories mostly become fat. Even at maintenance, protein keeps you fuller longer, supports recovery from training, and has the highest thermic effect of any macro, meaning your body burns more calories just digesting it. Hitting your protein target consistently is the single most impactful nutrition habit you can build.</p>
+            </div>
+
+            <div class="guide-section">
+                <h3>Losing Weight the Right Way</h3>
+                <p>Healthy fat loss comes down to one thing: a sustained calorie deficit. You need to eat fewer calories than you burn over time. The key word is sustained — crash diets, extreme deficits, and cutting out entire food groups work short term but almost always lead to rebound weight gain because they're impossible to maintain. A 300–500 calorie daily deficit is the sweet spot: significant enough to produce consistent fat loss (roughly 0.5–1 lb per week) without tanking your energy, destroying your metabolism, or burning muscle. Prioritize protein, keep training hard, sleep well, and let the deficit do the work gradually.</p>
+            </div>
+
+            <div class="guide-section">
+                <h3>Gaining Weight the Right Way</h3>
+                <p>Healthy muscle gain requires a calorie surplus combined with consistent resistance training. Without training, extra calories become fat — plain and simple. With training, a modest surplus of 200–400 calories gives your body the energy it needs to repair and build muscle after workouts. Bigger surpluses don't build muscle faster; they just add more fat alongside the muscle. Expect slow progress — gaining 0.5 lb per week is a great rate and mostly reflects actual muscle. Patience is the hardest part of bulking correctly, but the results look far better than aggressive bulking followed by aggressive cutting.</p>
+            </div>
+
+            <div class="guide-section last">
+                <h3>Food Quality Matters Too</h3>
+                <p>Hitting your macro numbers matters, but where those macros come from also affects how you feel, perform, and recover. Whole foods — lean meats, eggs, fish, rice, oats, fruits, vegetables, nuts, and legumes — come with fiber, vitamins, and minerals that processed foods lack. That said, rigid "clean eating" rules often backfire by making nutrition feel restrictive and unsustainable. A practical approach is to get 80–90% of your calories from whole, minimally processed foods and leave room for flexibility the rest of the time. Consistency over months beats perfection over weeks every time.</p>
+            </div>
+        </div>
+
+        <div class="cta">
+            <button class="calculate-btn" onclick="switchTab('calculator')">Go to Calculator →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let sex = 'male';
+    let unit = 'lbs';
+    let goal = 'maintain';
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.getElementById('content-' + tab).style.display = 'block';
+    }
+
+    function setSex(val) {
+        sex = val;
+        document.getElementById('btn-male').classList.toggle('active', val === 'male');
+        document.getElementById('btn-female').classList.toggle('active', val === 'female');
+    }
+
+    function setUnit(val) {
+        unit = val;
+        document.getElementById('btn-lbs').classList.toggle('active', val === 'lbs');
+        document.getElementById('btn-kg').classList.toggle('active', val === 'kg');
+        document.getElementById('height-imperial').style.display = val === 'lbs' ? 'flex' : 'none';
+        document.getElementById('height-metric').style.display = val === 'kg' ? 'flex' : 'none';
+        document.getElementById('weight').placeholder = val === 'lbs' ? 'e.g. 170' : 'e.g. 77';
+    }
+
+    function setGoal(val) {
+        goal = val;
+        ['lose','maintain','gain'].forEach(g => {
+            document.getElementById('btn-' + g).classList.toggle('active', g === val);
+        });
+    }
+
+    function calculate() {
+        const age = parseFloat(document.getElementById('age').value);
+        const weight = parseFloat(document.getElementById('weight').value);
+        const activity = parseFloat(document.getElementById('activity').value);
+
+        if (!age || !weight) { alert('Please fill in all fields.'); return; }
+
+        let weightKg = unit === 'lbs' ? weight * 0.453592 : weight;
+        let heightCm;
+        if (unit === 'lbs') {
+            const ft = parseFloat(document.getElementById('feet').value) || 0;
+            const inches = parseFloat(document.getElementById('inches').value) || 0;
+            heightCm = ((ft * 12) + inches) * 2.54;
+        } else {
+            heightCm = parseFloat(document.getElementById('cm').value);
+        }
+        if (!heightCm) { alert('Please enter your height.'); return; }
+
+        let bmr = sex === 'male'
+            ? (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5
+            : (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
+
+        let tdee = bmr * activity;
+        let calories = goal === 'lose' ? Math.round(tdee - 500)
+                     : goal === 'gain' ? Math.round(tdee + 300)
+                     : Math.round(tdee);
+
+        const weightLbs = unit === 'lbs' ? weight : weight * 2.20462;
+        const proteinG = Math.round(weightLbs * 0.8);
+        const proteinCals = proteinG * 4;
+        const fatCals = Math.round(calories * 0.25);
+        const fatG = Math.round(fatCals / 9);
+        const carbCals = calories - proteinCals - fatCals;
+        const carbG = Math.round(carbCals / 4);
+
+        document.getElementById('total-calories').textContent = calories.toLocaleString();
+        document.getElementById('protein-g').textContent = proteinG + 'g';
+        document.getElementById('protein-cals').textContent = proteinCals + ' kcal';
+        document.getElementById('carbs-g').textContent = carbG + 'g';
+        document.getElementById('carbs-cals').textContent = carbCals + ' kcal';
+        document.getElementById('fats-g').textContent = fatG + 'g';
+        document.getElementById('fats-cals').textContent = fatCals + ' kcal';
+
+        const adviceMap = {
+            lose: `<div class="advice lose"><strong>Losing Weight Healthily</strong><p>A 500 calorie deficit creates roughly 1 lb of fat loss per week — the safe, sustainable rate. Don't go lower than this; aggressive cuts burn muscle and crash your metabolism. Prioritize protein to preserve the muscle you have.</p></div>`,
+            maintain: `<div class="advice maintain"><strong>Maintaining Weight</strong><p>These are your TDEE calories — what your body burns daily at your activity level. Hit these numbers consistently and your weight stays stable. Focus on food quality and hitting your protein target.</p></div>`,
+            gain: `<div class="advice gain"><strong>Gaining Weight Healthily</strong><p>A 300 calorie surplus adds roughly 0.5 lb per week — a slow, clean bulk that minimizes fat gain. Going higher adds weight faster but most of it will be fat. Stay consistent and patient.</p></div>`
+        };
+        document.getElementById('goal-advice').innerHTML = adviceMap[goal];
+
+        const tipsMap = {
+            lose: ['🥩 Hit your protein target every day — it keeps you full and preserves muscle','💧 Drink water before meals to reduce hunger','🥗 Fill half your plate with vegetables — high volume, low calories','😴 Sleep 7-9 hours — poor sleep spikes hunger hormones','📏 Track your food for at least the first few weeks to build awareness'],
+            maintain: ['🥩 Protein is still the priority — it keeps your body composition solid','⚖️ Weigh yourself weekly, same time of day, to catch drift early','🏋️ Keep training hard — maintenance calories support performance','🍽️ Eat mostly whole foods — easier to stay in range without tracking','📅 Be consistent during the week; weekends are where most people slip'],
+            gain: ['🥩 High protein protects against gaining fat instead of muscle','🍚 Carbs fuel your workouts — don\'t fear them during a bulk','📈 Aim for 0.5-1 lb gained per week — anything faster is mostly fat','🏋️ You must train hard to give your body a reason to build muscle','😴 Muscle is built during recovery — sleep is non-negotiable']
+        };
+
+        document.getElementById('tips-grid').innerHTML = tipsMap[goal].map(t => `<div class="tip-item">${t}</div>`).join('');
+
+        const resultsEl = document.getElementById('results');
+        resultsEl.style.display = 'block';
+        resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+</script>
+</body>
+</html>
+{% endblock content %}
