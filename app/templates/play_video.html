@@ -10,26 +10,45 @@
 </head>
 <body>
     <div class="container">
-    <h1>{{ workout_name.title() }}</h1>
-    
-    <form action="#" method="POST">
-    <!-- Video player -->
-    <div class="video_container">
-        <video width="600" controls>
-            <source src="{{ video_url }}" type="video/mp4">
-            <source src="{{video_url }}" type="video/webm">
-            Your browser does not support the video tag.
-        </video>
-        
-    </div>
-    <div class="submit-btn">
-        <button type="submit" value="submit" class="return-btn">Return to Day</button>
-    </div>
-    </form>
-    <a href="{{url_for('day')}}">Return back to routine</a>
+        <h1>{{ workout_name.title() }}</h1>
+
+        <form action="#" method="POST">
+            <div class="video_container">
+                <video controls>
+                    <source src="{{ video_url }}" type="video/mp4">
+                    <source src="{{ video_url }}" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            {% if description %}
+            <div class="description-wrapper">
+                <button type="button" class="description-btn" onclick="toggleDescription()">
+                    <span>Description</span>
+                    <span id="arrow">▾</span>
+                </button>
+                <div class="description-dropdown" id="descriptionDropdown">
+                    <p>{{ description }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="submit-btn">
+                <button type="submit" value="submit" class="return-btn">Return to Day</button>
+            </div>
+        </form>
+
+        <a href="{{ url_for('day') }}">Return back to routine</a>
     </div>
 
+    <script>
+        function toggleDescription() {
+            const dropdown = document.getElementById('descriptionDropdown');
+            const arrow = document.getElementById('arrow');
+            const isOpen = dropdown.classList.toggle('open');
+            arrow.textContent = isOpen ? '▴' : '▾';
+        }
+    </script>
 </body>
 </html>
-
-{% endblock content%}
+{% endblock content %}

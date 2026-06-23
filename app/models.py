@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, AdminIndexView
+from flask_admin import expose
+from flask_admin.menu import MenuLink
 from flask_login import (
     LoginManager,
     UserMixin,
@@ -427,3 +429,8 @@ class MyAdminIndexView(AdminIndexView):
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for("day"))
+
+    @expose('/')
+    def index(self):
+        logout_url = url_for('logout')
+        return self.render('admin/index.html', logout_url=logout_url)

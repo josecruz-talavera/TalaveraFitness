@@ -39,6 +39,7 @@ from app.models import (
     MyAdminIndexView,
     RoutineDays,
     RoutineDaysView,
+    MenuLink,
 )
 from app.data.info_to_insert import *
 from app.workout_functions import (
@@ -85,6 +86,7 @@ try:
     admin.add_view(WorkoutsView(Workouts, db.session))
     admin.add_view(UserProgressView(UserProgress, db.session))
     admin.add_view(RoutineDaysView(RoutineDays, db.session))
+    admin.add_link(MenuLink(name='Logout', url='/logout'))
 except Exception as e:
     print(f"Error initializing admin views: {str(e)}")
 
@@ -112,17 +114,19 @@ def video():
 @app.route("/play", methods=["POST", "GET"])
 def play_video():
     if "user_id" in session:
-        video_url = request.args.get(
-            "video_url"
-        )  # Get the video URL from query parameter
+        video_url = request.args.get("video_url")
         if request.method == "POST":
             return redirect(url_for("day"))
         else:
+            workout_name = filter_video_name(video_url, "workout_vids")
+            workout = Workouts.query.filter_by(workout_name=workout_name).first()
+            description = workout.description if workout else None
 
             return render_template(
                 "play_video.html",
                 video_url=video_url,
-                workout_name=filter_video_name(video_url, "workout_vids"),
+                workout_name=workout_name,
+                description=description,
             )
 
     return redirect(url_for("login"))
@@ -246,9 +250,7 @@ def about_me():
 def routine():
     if "user_id" in session:
         user = User.query.filter_by(id=session["user_id"]).first()
-
         routines1 = routine_with_videos(user, Workouts.query.all())
-
         return render_template("routine.html", routine_days=routines1)
     else:
         return redirect(url_for("login"))
@@ -292,17 +294,13 @@ def change_day_id():
     user = User.query.filter_by(id=session["user_id"]).first()
     routine = Routine.query.filter_by(id=user.user_routine).first()
 
-    # routine.workouts is now ordered by day_order, so this list reflects
-    # the actual intended day sequence rather than raw id values.
     day_ids = [d.id for d in routine.workouts]
 
     if user.current_day_id not in day_ids:
-        # current day isn't part of this routine (e.g. stale/old routine) -> reset
         user.current_day_id = user.beginning_day_id
     else:
-        current_index = day_ids.index(user.current_day_id)
-        next_index = (current_index + 1) % len(day_ids)  # wraps back to day 1 only after the true last day
-        user.current_day_id = day_ids[next_index]
+        idx = day_ids.index(user.current_day_id)
+        user.current_day_id = day_ids[(idx + 1) % len(day_ids)]
 
     db.session.commit()
     return redirect(url_for("day"))
