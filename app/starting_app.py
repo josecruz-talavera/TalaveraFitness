@@ -296,11 +296,35 @@ def day():
 
 @app.route("/change_day_id", methods=["POST", "GET"])
 def change_day_id():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
     user = User.query.filter_by(id=session["user_id"]).first()
     routine = Routine.query.filter_by(id=user.user_routine).first()
 
-    day_ids = [d.id for d in routine.workouts]
+    # Save progress for each exercise submitted
+    workout_names = request.form.getlist("workout_names")
+    sets_list    = request.form.getlist("sets")
+    reps_list    = request.form.getlist("reps")
+    weight_list  = request.form.getlist("weight")
 
+    for i, workout_name in enumerate(workout_names):
+        sets   = int(sets_list[i])   if i < len(sets_list)   and sets_list[i]   else 0
+        reps   = int(reps_list[i])   if i < len(reps_list)   and reps_list[i]   else 0
+        weight = int(weight_list[i]) if i < len(weight_list) and weight_list[i] else 0
+
+        progress = UserProgress(
+            workout_done=workout_name,
+            sets=sets,
+            reps=reps,
+            weight_lifted=weight,
+            date=date.today(),
+            user_id=user.id,
+        )
+        db.session.add(progress)
+
+    # Advance to next day
+    day_ids = [d.id for d in routine.workouts]
     if user.current_day_id not in day_ids:
         user.current_day_id = user.beginning_day_id
     else:
@@ -309,6 +333,35 @@ def change_day_id():
 
     db.session.commit()
     return redirect(url_for("day"))
+
+
+@app.route("/progress/edit/<int:progress_id>", methods=["GET", "POST"])
+def edit_progress(progress_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    progress = UserProgress.query.filter_by(id=progress_id, user_id=session["user_id"]).first()
+    if not progress:
+        flash("Progress entry not found.")
+        return redirect(url_for("day"))
+
+    if request.method == "POST":
+        progress.sets         = int(request.form.get("sets", 0) or 0)
+        progress.reps         = int(request.form.get("reps", 0) or 0)
+        progress.weight_lifted = int(request.form.get("weight", 0) or 0)
+        db.session.commit()
+        flash("Progress updated!")
+        return redirect(url_for("progress_history"))
+
+    return render_template("edit_progress.html", progress=progress)
+
+
+@app.route("/progress")
+def progress_history():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    entries = UserProgress.query.filter_by(user_id=session["user_id"]).order_by(UserProgress.date.desc(), UserProgress.id.desc()).all()
+    return render_template("progress.html", entries=entries)
 
 
 @app.route("/contact_us", methods=["POST", "GET"])

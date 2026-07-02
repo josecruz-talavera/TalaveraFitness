@@ -1,0 +1,201 @@
+.progress-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+}
+
+.empty {
+    color: rgba(255,255,255,0.5);
+    font-size: 1rem;
+    margin-top: 40px;
+}
+
+/* Day group */
+.day-group {
+    margin-bottom: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.day-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.06);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: var(--text-primary);
+}
+
+.day-header:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.day-date {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.day-arrow {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
+    transition: transform 0.2s;
+}
+
+/* Collapsible body */
+.day-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.day-body.open {
+    max-height: 2000px;
+}
+
+/* Table */
+.progress-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.progress-table th {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: rgba(255,255,255,0.45);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    text-align: left;
+    background: rgba(255,255,255,0.02);
+}
+
+.progress-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: rgba(255,255,255,0.85);
+    text-align: left;
+}
+
+.progress-table tr:last-child td {
+    border-bottom: none;
+}
+
+.progress-table tr:hover td {
+    background: rgba(255,255,255,0.03);
+}
+
+.edit-btn {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(52, 152, 219, 0.2);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    border-radius: 6px;
+    color: rgba(52, 152, 219, 0.9);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.edit-btn:hover {
+    background: rgba(52, 152, 219, 0.35);
+    color: white;
+}
+
+/* Edit form */
+.subtitle {
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 28px;
+    font-size: 1rem;
+}
+
+.edit-form {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 28px 24px;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.edit-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.edit-field input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.edit-field input:focus {
+    outline: none;
+    border-color: rgba(52, 152, 219, 0.7);
+}
+
+.save-btn {
+    width: 100%;
+    padding: 14px;
+    background: rgba(52, 152, 219, 0.8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 12px;
+}
+
+.save-btn:hover { background: rgba(52, 152, 219, 1); }
+
+.cancel-btn {
+    display: block;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.cancel-btn:hover { color: white; }
+
+@media (max-width: 599px) {
+    h1 { font-size: 1.6rem; }
+    .day-date { font-size: 0.9rem; }
+    .progress-table th,
+    .progress-table td { padding: 10px 10px; font-size: 0.78rem; }
+    .edit-btn { padding: 3px 8px; font-size: 0.7rem; }
+}

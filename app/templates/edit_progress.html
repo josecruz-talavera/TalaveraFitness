@@ -1,0 +1,26 @@
+{% extends "navbar.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='progress.css')}}">
+
+<div class="progress-container">
+    <h1>Edit Progress</h1>
+    <p class="subtitle">{{ progress.workout_done.title() }} — {{ progress.date.strftime('%b %d, %Y') }}</p>
+
+    <form method="POST" class="edit-form">
+        <div class="edit-field">
+            <label>Sets</label>
+            <input type="number" name="sets" value="{{ progress.sets }}" min="0" max="99">
+        </div>
+        <div class="edit-field">
+            <label>Reps</label>
+            <input type="number" name="reps" value="{{ progress.reps }}" min="0" max="999">
+        </div>
+        <div class="edit-field">
+            <label>Weight (lbs)</label>
+            <input type="number" name="weight" value="{{ progress.weight_lifted }}" min="0" max="9999">
+        </div>
+        <button type="submit" class="save-btn">Save Changes</button>
+        <a href="{{ url_for('progress_history') }}" class="cancel-btn">Cancel</a>
+    </form>
+</div>
+{% endblock %}

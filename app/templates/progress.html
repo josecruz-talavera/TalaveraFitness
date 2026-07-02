@@ -1,0 +1,56 @@
+{% extends "navbar.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='progress.css')}}">
+
+<div class="progress-container">
+    <h1>My Progress</h1>
+
+    {% if entries %}
+        {% set ns = namespace(current_date=None) %}
+        {% for entry in entries %}
+            {% if entry.date != ns.current_date %}
+                {% if ns.current_date is not none %}
+                    </tbody></table></div></div>
+                {% endif %}
+                {% set ns.current_date = entry.date %}
+                <div class="day-group">
+                    <button class="day-header" onclick="toggleDay(this)">
+                        <span class="day-date">{{ entry.date.strftime('%A, %B %d %Y') }}</span>
+                        <span class="day-arrow">▸</span>
+                    </button>
+                    <div class="day-body">
+                        <table class="progress-table">
+                            <thead>
+                                <tr>
+                                    <th>Exercise</th>
+                                    <th>Sets</th>
+                                    <th>Reps</th>
+                                    <th>Weight</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            {% endif %}
+                            <tr>
+                                <td>{{ entry.workout_done.title() }}</td>
+                                <td>{{ entry.sets }}</td>
+                                <td>{{ entry.reps }}</td>
+                                <td>{{ entry.weight_lifted }} lbs</td>
+                                <td><a href="{{ url_for('edit_progress', progress_id=entry.id) }}" class="edit-btn">Edit</a></td>
+                            </tr>
+        {% endfor %}
+        </tbody></table></div></div>
+    {% else %}
+    <p class="empty">No progress logged yet. Complete a day to start tracking!</p>
+    {% endif %}
+</div>
+
+<script>
+    function toggleDay(btn) {
+        const body = btn.nextElementSibling;
+        const arrow = btn.querySelector('.day-arrow');
+        const isOpen = body.classList.toggle('open');
+        arrow.textContent = isOpen ? '▾' : '▸';
+    }
+</script>
+{% endblock %}
