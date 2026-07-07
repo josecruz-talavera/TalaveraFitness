@@ -68,6 +68,7 @@
                         <option value="1.725">Very active (6-7 days/week)</option>
                         <option value="1.9">Extra active (physical job + training)</option>
                     </select>
+                    <p class="activity-nudge">💡 Most people overestimate this. When in doubt, pick the lower option — you can always adjust up after a few weeks of tracking.</p>
                 </div>
 
                 <div class="form-group full-width">
@@ -131,6 +132,14 @@
             <div class="accuracy-note">
                 <strong>📊 How accurate is this?</strong>
                 <p>This calculator uses the Mifflin-St Jeor formula, accurate within ±10% for most people. Use these numbers as a starting point, eat at these targets for 2–3 weeks, track your weight, then adjust by 100–200 calories as needed.</p>
+            </div>
+
+            <!-- Meal Plan -->
+            <div class="meal-plan" id="meal-plan">
+                <h2>Sample Meal Plan</h2>
+                <p class="meal-plan-subtitle">A full day of eating built around your targets</p>
+                <div class="disclaimer">⚠️ This is a general guide, not medical nutrition advice. Consult a professional before making major dietary changes.</div>
+                <div class="meals-grid" id="meals-grid"></div>
             </div>
         </div>
     </div>
@@ -267,6 +276,110 @@
         const resultsEl = document.getElementById('results');
         resultsEl.style.display = 'block';
         resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Generate meal plan
+        generateMealPlan(calories, proteinG, carbG, fatG, goal);
+    }
+
+    function generateMealPlan(calories, protein, carbs, fats, goal) {
+        // Meal calorie splits: pre 10%, breakfast 25%, lunch 30%, post 10%, dinner 25%
+        const splits = { pre: 0.10, breakfast: 0.25, lunch: 0.30, post: 0.10, dinner: 0.25 };
+
+        const meals = {
+            pre: {
+                icon: '⚡',
+                label: 'Pre-Workout',
+                time: '60–90 min before training',
+                items: mealItems('pre', calories, protein, carbs, fats, goal)
+            },
+            breakfast: {
+                icon: '🍳',
+                label: 'Breakfast',
+                time: 'Morning',
+                items: mealItems('breakfast', calories, protein, carbs, fats, goal)
+            },
+            lunch: {
+                icon: '🍗',
+                label: 'Lunch',
+                time: 'Midday',
+                items: mealItems('lunch', calories, protein, carbs, fats, goal)
+            },
+            post: {
+                icon: '💪',
+                label: 'Post-Workout',
+                time: '30–60 min after training',
+                items: mealItems('post', calories, protein, carbs, fats, goal)
+            },
+            dinner: {
+                icon: '🥩',
+                label: 'Dinner',
+                time: 'Evening',
+                items: mealItems('dinner', calories, protein, carbs, fats, goal)
+            }
+        };
+
+        const mealCals = {
+            pre: Math.round(calories * splits.pre),
+            breakfast: Math.round(calories * splits.breakfast),
+            lunch: Math.round(calories * splits.lunch),
+            post: Math.round(calories * splits.post),
+            dinner: Math.round(calories * splits.dinner),
+        };
+
+        const html = Object.keys(meals).map(key => {
+            const m = meals[key];
+            return `
+            <div class="meal-card">
+                <div class="meal-header">
+                    <span class="meal-icon">${m.icon}</span>
+                    <div>
+                        <div class="meal-label">${m.label}</div>
+                        <div class="meal-time">${m.time} · ~${mealCals[key]} cal</div>
+                    </div>
+                </div>
+                <ul class="meal-items">
+                    ${m.items.map(i => `<li>${i}</li>`).join('')}
+                </ul>
+            </div>`;
+        }).join('');
+
+        document.getElementById('meals-grid').innerHTML = html;
+    }
+
+    function mealItems(meal, calories, protein, carbs, fats, goal) {
+        // Scale portions based on total calories (baseline = 2000 cal)
+        const scale = calories / 2000;
+        const s = (n) => Math.round(n * scale);
+
+        const plans = {
+            pre: {
+                lose:     [`Banana (1 medium)`, `Rice cakes (2)`, `Black coffee or water`],
+                maintain: [`Oatmeal (${s(40)}g dry) with honey`, `1 banana`, `Black coffee`],
+                gain:     [`Oatmeal (${s(60)}g dry) with honey`, `1 banana`, `1 slice whole wheat toast with peanut butter`]
+            },
+            breakfast: {
+                lose:     [`Eggs (${s(3)} whole) scrambled`, `Egg whites (${s(3)})`, `Spinach and tomato`, `Black coffee or green tea`],
+                maintain: [`Eggs (${s(3)} whole) scrambled`, `Oatmeal (${s(50)}g dry) with berries`, `Orange juice (small glass)`],
+                gain:     [`Eggs (${s(4)} whole) scrambled`, `Oatmeal (${s(80)}g dry) with banana and honey`, `Whole milk (${s(240)}ml)`, `Orange juice`]
+            },
+            lunch: {
+                lose:     [`Grilled chicken breast (${s(150)}g)`, `Brown rice (${s(80)}g dry)`, `Steamed broccoli and green beans`, `Water with lemon`],
+                maintain: [`Grilled chicken breast (${s(170)}g)`, `Brown rice (${s(100)}g dry)`, `Mixed vegetables with olive oil`, `Apple`],
+                gain:     [`Grilled chicken breast (${s(200)}g)`, `Brown rice (${s(130)}g dry)`, `Mixed vegetables with olive oil`, `Greek yogurt (${s(150)}g)`]
+            },
+            post: {
+                lose:     [`Whey protein shake (1 scoop, ~${s(25)}g protein)`, `Water or skim milk`],
+                maintain: [`Whey protein shake (1 scoop)`, `Banana`, `Low-fat milk (${s(240)}ml)`],
+                gain:     [`Whey protein shake (1–2 scoops)`, `Banana`, `Whole milk (${s(300)}ml)`, `Handful of granola`]
+            },
+            dinner: {
+                lose:     [`Lean ground beef or turkey (${s(150)}g)`, `Sweet potato (${s(120)}g)`, `Large green salad with olive oil and vinegar`],
+                maintain: [`Salmon or chicken (${s(180)}g)`, `Sweet potato (${s(150)}g)`, `Roasted vegetables with olive oil`, `Side salad`],
+                gain:     [`Salmon or steak (${s(220)}g)`, `Sweet potato (${s(200)}g)`, `Roasted vegetables with olive oil`, `Whole wheat dinner roll`, `Glass of whole milk`]
+            }
+        };
+
+        return plans[meal][goal] || plans[meal]['maintain'];
     }
 </script>
 </body>

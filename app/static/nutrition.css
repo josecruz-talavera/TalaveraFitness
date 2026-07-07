@@ -462,3 +462,103 @@ h1 {
     .guide-section h3 { font-size: 0.9rem; }
     .guide-section p { font-size: 0.875rem; }
 }
+
+/* Meal Plan */
+.meal-plan {
+    margin-top: 28px;
+    text-align: left;
+}
+
+.meal-plan h2 {
+    font-size: 1.3rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.meal-plan-subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.disclaimer {
+    background: rgba(243, 156, 18, 0.1);
+    border: 1px solid rgba(243, 156, 18, 0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.meals-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.meal-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.meal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.meal-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.meal-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: white;
+}
+
+.meal-time {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 1px;
+}
+
+.meal-items {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meal-items li {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.78);
+    line-height: 1.4;
+}
+
+@media (max-width: 599px) {
+    .meal-label { font-size: 0.88rem; }
+    .meal-items li { font-size: 0.82rem; }
+    .meal-icon { font-size: 1.2rem; }
+}
+
+/* Activity level nudge */
+.activity-nudge {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    margin: 6px 0 0 0;
+    line-height: 1.5;
+    font-style: italic;
+    text-align: left;
+    padding: 0;
+    max-width: none;
+}

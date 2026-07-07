@@ -4,27 +4,90 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create_account.css')}}">
 
 {% with messages = get_flashed_messages() %}
-    {%if messages%}
+    {% if messages %}
         {% for msg in messages %}
-            <p>{{msg}}</p>        
+            <p>{{msg}}</p>
         {% endfor %}
     {% endif %}
-{% endwith%}
+{% endwith %}
 
 <div class="container">
-    <h1>New user</h1>
-    
+    <h1>Create Account</h1>
+
     <form action="#" method="POST">
         <div class="basic-info">
             <p><input type="text" name="username" placeholder="Username" /></p>
             <p><input type="email" name="email" placeholder="Enter Email" value="{{email if email}}"/></p>
             <p><input type="text" name="first_name" placeholder="First name"/></p>
             <p><input type="text" name="last_name" placeholder="Last name"/></p>
-            <p><input type="password" name ="password" placeholder="password" required="required"></p>
+            <p><input type="password" name="password" placeholder="Password" required></p>
+        </div>
+
+        <!-- Questionnaire -->
+        <div class="questionnaire">
+            <h2>Tell us about yourself</h2>
+
+            <div class="q-group">
+                <label class="q-label">What is your goal?</label>
+                <div class="q-options">
+                    <label class="q-option">
+                        <input type="radio" name="goal" value="lose weight" required>
+                        <span>📉 Lose Weight</span>
+                    </label>
+                    <label class="q-option">
+                        <input type="radio" name="goal" value="build muscle">
+                        <span>💪 Build Muscle</span>
+                    </label>
+                    <label class="q-option">
+                        <input type="radio" name="goal" value="improve fitness">
+                        <span>🏃 Improve Fitness</span>
+                    </label>
+                    <label class="q-option">
+                        <input type="radio" name="goal" value="maintain">
+                        <span>⚖️ Maintain</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="q-group">
+                <label class="q-label">What is your experience level?</label>
+                <div class="q-options">
+                    <label class="q-option">
+                        <input type="radio" name="level" value="beginner" required>
+                        <span>🌱 Beginner<small>Never trained or less than 6 months</small></span>
+                    </label>
+                    <label class="q-option">
+                        <input type="radio" name="level" value="intermediate">
+                        <span>🔥 Intermediate<small>6 months – 2 years</small></span>
+                    </label>
+                    <label class="q-option">
+                        <input type="radio" name="level" value="advanced">
+                        <span>⚡ Advanced<small>2+ years</small></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="q-group">
+                <label class="q-label">How many days per week can you train?</label>
+                <div class="q-options q-options--row">
+                    <label class="q-option q-option--small">
+                        <input type="radio" name="frequency" value="3" required>
+                        <span>3 days</span>
+                    </label>
+                    <label class="q-option q-option--small">
+                        <input type="radio" name="frequency" value="4">
+                        <span>4 days</span>
+                    </label>
+                    <label class="q-option q-option--small">
+                        <input type="radio" name="frequency" value="5">
+                        <span>5 days</span>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="submit-btn">
-            <button type="submit" value="submit" class="create-account-btn">Create Account</button>
+            <button type="submit" class="create-account-btn">Create Account</button>
         </div>
         <a class="login-link" href="{{url_for('login')}}">Already have an account?</a>
     </form>
