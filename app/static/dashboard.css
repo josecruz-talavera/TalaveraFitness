@@ -1,0 +1,258 @@
+.dashboard {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+    color: var(--text-primary);
+}
+
+/* Greeting */
+.greeting {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.greeting h1 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.greeting-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 0;
+    max-width: none;
+}
+
+/* Stats row */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 18px 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+/* Section cards */
+.section-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.section-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.section-action {
+    font-size: 0.85rem;
+    color: rgba(52, 152, 219, 0.9);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.section-action:hover { color: white; }
+
+/* Today's workout */
+.today-day {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.today-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+}
+
+.today-meta {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+}
+
+/* Last session */
+.last-session {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.last-date {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.last-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.last-stats span:first-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.last-stats span:last-child {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.empty-state {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.35);
+    font-style: italic;
+    text-align: left;
+    padding: 0;
+    max-width: none;
+}
+
+/* Quick links */
+.quick-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.quick-link {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 8px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    text-align: center;
+}
+
+.quick-link:hover {
+    background: rgba(52, 152, 219, 0.15);
+    border-color: rgba(52, 152, 219, 0.4);
+    color: white;
+}
+
+.ql-icon { font-size: 1.5rem; }
+
+/* Mobile */
+@media (max-width: 599px) {
+    .greeting h1 { font-size: 1.4rem; }
+    .stat-value { font-size: 1.6rem; }
+    .stat-label { font-size: 0.65rem; }
+    .today-name { font-size: 1.1rem; }
+    .quick-links { grid-template-columns: repeat(2, 1fr); }
+    .quick-link { font-size: 0.78rem; padding: 14px 8px; }
+}
+
+/* Big prominent Today's Workout CTA */
+.today-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(52, 152, 219, 0.1));
+    border: 2px solid rgba(52, 152, 219, 0.6);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.2s;
+}
+
+.today-cta:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.45), rgba(52, 152, 219, 0.2));
+    border-color: rgba(52, 152, 219, 0.9);
+    transform: translateY(-2px);
+    color: white;
+}
+
+.today-cta-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.today-cta-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(52, 152, 219, 0.9);
+    font-weight: 700;
+}
+
+.today-cta-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1.2;
+}
+
+.today-cta-meta {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.today-cta-arrow {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: rgba(52, 152, 219, 0.9);
+    white-space: nowrap;
+    padding-left: 20px;
+}
+
+@media (max-width: 599px) {
+    .today-cta { padding: 18px 16px; }
+    .today-cta-name { font-size: 1.2rem; }
+    .today-cta-arrow { font-size: 0.95rem; }
+}

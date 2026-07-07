@@ -12,8 +12,9 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="/" class="brand">TalaveraTraining</a>
+        <a href="{{url_for('welcome')}}" class="brand">TalaveraTraining</a>
         <div class="menu" id="navMenu">
+            <a href="{{url_for('dashboard')}}">Home</a>
             <a href="{{url_for('routine')}}">Routine</a>
             <a href="{{url_for('day')}}">Day</a>
             <a href="{{url_for('progress_history')}}">Progress</a>

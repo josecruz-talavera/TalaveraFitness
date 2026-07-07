@@ -1,0 +1,83 @@
+{% extends "navbar.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dashboard.css')}}">
+
+<div class="dashboard">
+
+    <!-- Greeting -->
+    <div class="greeting">
+        <h1>Welcome back, {{ user.first_name }}! 💪</h1>
+        <p class="greeting-sub">Ready to train? Here's where you stand.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <span class="stat-value">{{ streak }}</span>
+            <span class="stat-label">Day Streak 🔥</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">{{ total_sessions }}</span>
+            <span class="stat-label">Sessions Logged</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">{{ day_number }}/{{ total_days }}</span>
+            <span class="stat-label">Routine Progress</span>
+        </div>
+    </div>
+
+    <!-- Today's workout — prominent CTA -->
+    <a href="{{ url_for('day') }}" class="today-cta">
+        <div class="today-cta-left">
+            <span class="today-cta-label">Today's Workout</span>
+            {% if current_day %}
+            <span class="today-cta-name">{{ current_day.workout_day_name.replace('_', ' ').title() }}</span>
+            <span class="today-cta-meta">Day {{ day_number }} of {{ total_days }} · {{ routine.routine_name.replace('_', ' ').title() }}</span>
+            {% else %}
+            <span class="today-cta-name">No routine assigned</span>
+            {% endif %}
+        </div>
+        <span class="today-cta-arrow">▶ Start</span>
+    </a>
+
+    <!-- Last session -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2>Last Session</h2>
+            <a href="{{ url_for('progress_history') }}" class="section-action">View all →</a>
+        </div>
+        {% if last_entry %}
+        <div class="last-session">
+            <span class="last-date">{{ last_entry.date.strftime('%A, %B %d') }}</span>
+            <div class="last-stats">
+                <span>{{ last_entry.workout_done.title() }}</span>
+                <span>{{ last_entry.sets }} sets · {{ last_entry.reps }} reps · {{ last_entry.weight_lifted }} lbs</span>
+            </div>
+        </div>
+        {% else %}
+        <p class="empty-state">No sessions logged yet. Complete your first workout!</p>
+        {% endif %}
+    </div>
+
+    <!-- Quick links -->
+    <div class="quick-links">
+        <a href="{{ url_for('day') }}" class="quick-link">
+            <span class="ql-icon">🏋️</span>
+            <span>Today's Day</span>
+        </a>
+        <a href="{{ url_for('routine') }}" class="quick-link">
+            <span class="ql-icon">📋</span>
+            <span>My Routine</span>
+        </a>
+        <a href="{{ url_for('progress_history') }}" class="quick-link">
+            <span class="ql-icon">📈</span>
+            <span>Progress</span>
+        </a>
+        <a href="{{ url_for('nutrition') }}" class="quick-link">
+            <span class="ql-icon">🥗</span>
+            <span>Nutrition</span>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

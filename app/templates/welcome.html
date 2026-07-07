@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalaveraTraining</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='welcome.css')}}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="welcome-nav">
+        <a href="{{ url_for('welcome') }}" class="nav-brand">TalaveraTraining</a>
+        <div class="nav-links">
+            <a href="{{ url_for('login') }}">Log In</a>
+            <a href="{{ url_for('create_account') }}" class="nav-cta">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Train Smarter.<br>Track Everything.<br>Get Results.</h1>
+            <p class="hero-sub">Personalized workout routines, video demonstrations, progress tracking, and nutrition guidance — all in one place.</p>
+            <div class="hero-btns">
+                <a href="{{ url_for('create_account') }}" class="btn-primary">Start for Free</a>
+                <a href="{{ url_for('login') }}" class="btn-secondary">Log In</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2>Everything you need to reach your goal</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3>Personalized Routines</h3>
+                <p>Tell us your goal, experience level, and how many days you can train — we'll assign you the right routine from day one.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🎥</span>
+                <h3>Video Demonstrations</h3>
+                <p>Every exercise comes with a video showing you exactly how to perform it. No guessing, no bad form.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3>Progress Tracking</h3>
+                <p>Log your sets, reps, and weight after every session. Watch your numbers go up over time.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🥗</span>
+                <h3>Nutrition Guide</h3>
+                <p>Calculate your daily macro targets and get a sample meal plan built around your specific calorie goal.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>Ready to start?</h2>
+        <p>Join TalaveraTraining and get a routine built for you in minutes.</p>
+        <a href="{{ url_for('create_account') }}" class="btn-primary">Create Your Account</a>
+    </section>
+
+    <footer class="welcome-footer">
+        <p>© 2025 TalaveraTraining · <a href="{{ url_for('contact_us') }}">Contact</a></p>
+    </footer>
+
+</body>
+</html>

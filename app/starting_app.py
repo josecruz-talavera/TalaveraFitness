@@ -10,7 +10,6 @@ from flask_login import (
 from flask_mail import Mail, Message
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 import os
 from dotenv import load_dotenv
 
@@ -58,12 +57,6 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["PYTHONPATH"] = os.getenv("PYTHONPATH")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 280,
-    "pool_size": 5,
-    "max_overflow": 2,
-}
 
 admin = Admin(app, index_view=MyAdminIndexView())
 
@@ -137,10 +130,75 @@ def play_video():
     return redirect(url_for("login"))
 
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/")
+def welcome():
+    if "user_id" in session:
+        return redirect(url_for("dashboard"))
+    return render_template("welcome.html")
+
+
+@app.route("/dashboard")
+def dashboard():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(id=session["user_id"]).first()
+    routine = Routine.query.filter_by(id=user.user_routine).first()
+
+    # Current day info
+    current_day = Day_of_routine.query.filter_by(id=user.current_day_id).first()
+
+    # Last session — most recent progress entry
+    last_entry = UserProgress.query.filter_by(user_id=user.id).order_by(
+        UserProgress.date.desc(), UserProgress.id.desc()
+    ).first()
+
+    # Streak — count consecutive days with progress logged
+    all_dates = db.session.query(UserProgress.date).filter_by(
+        user_id=user.id
+    ).distinct().order_by(UserProgress.date.desc()).all()
+    all_dates = [d[0] for d in all_dates]
+
+    streak = 0
+    check = date.today()
+    for d in all_dates:
+        if d == check or d == check - timedelta(days=1):
+            streak += 1
+            check = d - timedelta(days=1)
+        else:
+            break
+
+    # Total sessions logged
+    total_sessions = db.session.query(UserProgress.date).filter_by(
+        user_id=user.id
+    ).distinct().count()
+
+    # Day number in routine
+    if routine and current_day:
+        day_ids = [d.id for d in routine.workouts]
+        day_number = day_ids.index(user.current_day_id) + 1 if user.current_day_id in day_ids else 1
+        total_days = len(day_ids)
+    else:
+        day_number = 1
+        total_days = 0
+
+    return render_template(
+        "dashboard.html",
+        user=user,
+        routine=routine,
+        current_day=current_day,
+        last_entry=last_entry,
+        streak=streak,
+        total_sessions=total_sessions,
+        day_number=day_number,
+        total_days=total_days,
+    )
+
+
+@app.route("/login", methods=["POST", "GET"])
 def login():
     if "user_id" in session:
-        return redirect(url_for("day"))
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         session.permanent = True
         username = request.form["username"]
@@ -149,43 +207,30 @@ def login():
         user = User.query.filter_by(username=username.lower()).first()
         if user and user.password == password:
             session["user_id"] = user.id
-
             login_user(user)
 
             if user.role == None:
                 routine = Routine.query.filter_by(id=user.user_routine).first()
-
                 session["beginning_day"] = routine.workouts[0].id
-
                 user.days_logged_in += 1
                 db.session.commit()
 
                 if date(2024, 10, 23) > user.routine_change_date:
-
                     user.routine_change_date = date.today() + timedelta(weeks=6)
-                    next_routine = Routine.query.filter_by(
-                        routine_level=user.level
-                    ).all()
-
+                    next_routine = Routine.query.filter_by(routine_level=user.level).all()
                     while True:
-
                         choice = random.choice(next_routine).id
                         if choice != user.user_routine:
-
                             user.user_routine = choice
-                            # Get the new routine's first day
                             new_routine = Routine.query.filter_by(id=choice).first()
                             user.beginning_day_id = new_routine.workouts[0].id
-                            user.current_day_id = new_routine.workouts[
-                                0
-                            ].id  # reset to new routine's day 1
+                            user.current_day_id = new_routine.workouts[0].id
                             session["beginning_day"] = user.beginning_day_id
                             break
-
                     db.session.commit()
-                    return redirect(url_for("day"))
+                    return redirect(url_for("dashboard"))
 
-                return redirect(url_for("day"))
+                return redirect(url_for("dashboard"))
             return redirect(url_for("admin.index"))
         elif user is None:
             return redirect(url_for("create_account"))
@@ -196,7 +241,7 @@ def login():
 @app.route("/create_account", methods=["POST", "GET"])
 def create_account():
     if "user_id" in session:
-        return redirect(url_for("day"))
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         username   = request.form["username"]
         email      = request.form["email"]
@@ -260,7 +305,7 @@ def logout():
     session.pop("user_id", None)
     session.pop("username", None)
     session.pop("email", None)
-    return redirect(url_for("login"))
+    return redirect(url_for("welcome"))
 
 
 @app.route("/nutrition")
@@ -313,7 +358,7 @@ def day():
 
         workout_day = add_links_to_routine_days(day, Workouts.query.all())
         return render_template(
-            "day.html", workout_day=workout_day, day=day.workout_day_name
+            "day.html", workout_day=workout_day, day=day.workout_day_name, user=user
         )
     else:
         return redirect(url_for("login"))
@@ -359,20 +404,15 @@ def change_day_id():
 
 @app.route("/forgot_password", methods=["GET", "POST"])
 def forgot_password():
-    print("USERNAME:", repr(app.config["MAIL_USERNAME"]))
-    print("PASSWORD:", repr(app.config["MAIL_PASSWORD"]))
+    from itsdangerous import URLSafeTimedSerializer
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         user = User.query.filter_by(email=email).first()
-
-        # Always show the same message — don't reveal if email exists
         flash("If that email is registered you'll receive a reset link shortly.")
-
         if user:
             s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
             token = s.dumps(email, salt="password-reset")
             reset_url = url_for("reset_password", token=token, _external=True)
-
             try:
                 msg = Message(
                     subject="TalaveraTraining — Password Reset",
@@ -390,13 +430,13 @@ def forgot_password():
                 mail.send(msg)
             except Exception as e:
                 print(f"Email error: {e}")
-
         return redirect(url_for("login"))
     return render_template("forgot_password.html")
 
 
 @app.route("/reset_password/<token>", methods=["GET", "POST"])
 def reset_password(token):
+    from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
     s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
     try:
         email = s.loads(token, salt="password-reset", max_age=3600)
@@ -406,25 +446,21 @@ def reset_password(token):
     except BadSignature:
         flash("Invalid reset link.")
         return redirect(url_for("forgot_password"))
-
     if request.method == "POST":
         password = request.form.get("password", "")
         confirm  = request.form.get("confirm_password", "")
-
         if len(password) < 6:
             flash("Password must be at least 6 characters.")
             return render_template("reset_password.html", token=token)
         if password != confirm:
             flash("Passwords do not match.")
             return render_template("reset_password.html", token=token)
-
         user = User.query.filter_by(email=email).first()
         if user:
             user.password = password
             db.session.commit()
             flash("Password updated! You can now log in.")
         return redirect(url_for("login"))
-
     return render_template("reset_password.html", token=token)
 
 
@@ -447,7 +483,7 @@ def edit_progress(progress_id):
     ).first()
     if not progress:
         flash("Progress entry not found.")
-        return redirect(url_for("day"))
+        return redirect(url_for("progress_history"))
     if request.method == "POST":
         progress.sets          = int(request.form.get("sets", 0) or 0)
         progress.reps          = int(request.form.get("reps", 0) or 0)
