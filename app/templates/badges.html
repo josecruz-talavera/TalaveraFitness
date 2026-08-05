@@ -1,0 +1,48 @@
+{% extends "navbar.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='badges.css')}}">
+
+<div class="badges-container">
+    <h1>Badges</h1>
+    <p class="subtitle">{{ earned_badges|length }} of {{ (earned_badges|length) + (locked_badges|length) }} earned</p>
+
+    {% if earned_badges %}
+    <div class="badges-section">
+        <h2 class="badges-section-title">Earned</h2>
+        <div class="badges-grid">
+            {% for badge in earned_badges %}
+            <div class="badge-card earned">
+                <div class="badge-icon" style="background: {{ badge.color }}22; border-color: {{ badge.color }}55;">
+                    <span>{{ badge.icon }}</span>
+                </div>
+                <div class="badge-info">
+                    <span class="badge-name">{{ badge.name }}</span>
+                    <span class="badge-desc">{{ badge.description }}</span>
+                </div>
+                <span class="badge-check">✓</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if locked_badges %}
+    <div class="badges-section">
+        <h2 class="badges-section-title">Locked</h2>
+        <div class="badges-grid">
+            {% for badge in locked_badges %}
+            <div class="badge-card locked">
+                <div class="badge-icon locked-icon">
+                    <span>🔒</span>
+                </div>
+                <div class="badge-info">
+                    <span class="badge-name">{{ badge.name }}</span>
+                    <span class="badge-desc">{{ badge.description }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

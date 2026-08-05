@@ -256,3 +256,33 @@
     .today-cta-name { font-size: 1.2rem; }
     .today-cta-arrow { font-size: 0.95rem; }
 }
+
+/* Badge row on dashboard */
+.badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.badge-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-pill.earned {
+    background: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    color: white;
+}
+
+.badge-pill.more {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-color);
+    color: rgba(255,255,255,0.5);
+}

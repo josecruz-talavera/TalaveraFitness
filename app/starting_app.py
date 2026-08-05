@@ -52,6 +52,7 @@ from app.workout_functions import (
 from app.forms import ContactForm
 
 from app.user_functions import user_exists, create_user
+from app.badges import compute_badges
 
 load_dotenv()
 app = Flask(__name__)
@@ -144,36 +145,16 @@ def dashboard():
 
     user = User.query.filter_by(id=session["user_id"]).first()
     routine = Routine.query.filter_by(id=user.user_routine).first()
-
-    # Current day info
     current_day = Day_of_routine.query.filter_by(id=user.current_day_id).first()
 
-    # Last session — most recent progress entry
-    last_entry = UserProgress.query.filter_by(user_id=user.id).order_by(
+    all_progress = UserProgress.query.filter_by(user_id=user.id).order_by(
         UserProgress.date.desc(), UserProgress.id.desc()
-    ).first()
+    ).all()
 
-    # Streak — count consecutive days with progress logged
-    all_dates = db.session.query(UserProgress.date).filter_by(
-        user_id=user.id
-    ).distinct().order_by(UserProgress.date.desc()).all()
-    all_dates = [d[0] for d in all_dates]
+    last_entry = all_progress[0] if all_progress else None
 
-    streak = 0
-    check = date.today()
-    for d in all_dates:
-        if d == check or d == check - timedelta(days=1):
-            streak += 1
-            check = d - timedelta(days=1)
-        else:
-            break
+    earned, locked, streak, total_sessions = compute_badges(user, all_progress)
 
-    # Total sessions logged
-    total_sessions = db.session.query(UserProgress.date).filter_by(
-        user_id=user.id
-    ).distinct().count()
-
-    # Day number in routine
     if routine and current_day:
         day_ids = [d.id for d in routine.workouts]
         day_number = day_ids.index(user.current_day_id) + 1 if user.current_day_id in day_ids else 1
@@ -192,6 +173,27 @@ def dashboard():
         total_sessions=total_sessions,
         day_number=day_number,
         total_days=total_days,
+        earned_badges=earned,
+        locked_badges=locked,
+    )
+
+
+@app.route("/badges")
+def badges():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(id=session["user_id"]).first()
+    all_progress = UserProgress.query.filter_by(user_id=user.id).all()
+    earned, locked, streak, total_sessions = compute_badges(user, all_progress)
+
+    return render_template(
+        "badges.html",
+        user=user,
+        earned_badges=earned,
+        locked_badges=locked,
+        streak=streak,
+        total_sessions=total_sessions,
     )
 
 
@@ -215,7 +217,7 @@ def login():
                 user.days_logged_in += 1
                 db.session.commit()
 
-                if date(2024, 10, 23) > user.routine_change_date:
+                if user.routine_change_date and date(2024, 10, 23) > user.routine_change_date:
                     user.routine_change_date = date.today() + timedelta(weeks=6)
                     next_routine = Routine.query.filter_by(routine_level=user.level).all()
                     while True:

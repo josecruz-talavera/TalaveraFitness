@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta name="theme-color" content="#1a2535">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TalaveraTraining">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icons/icon-180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/icon-32.png">
     <!-- Base styles for consistent design across all pages -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
     <!-- Navbar specific styles -->
@@ -18,6 +24,7 @@
             <a href="{{url_for('routine')}}">Routine</a>
             <a href="{{url_for('day')}}">Day</a>
             <a href="{{url_for('progress_history')}}">Progress</a>
+            <a href="{{url_for('badges')}}">Badges</a>
             <a href="{{url_for('nutrition')}}">Nutrition</a>
             <a href="{{url_for('about_me')}}">About</a>
             <a href="{{url_for('contact_us')}}">Contact</a>
@@ -28,6 +35,13 @@
 {%block content%}
 {% endblock content%}
 <script src="{{ url_for('static', filename='navbar.js') }}"></script>
-
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/static/sw.js')
+                .catch(err => console.log('SW registration failed:', err));
+        });
+    }
+</script>
 </body>
 </html>

@@ -59,6 +59,29 @@
         {% endif %}
     </div>
 
+    <!-- Badges summary -->
+    <div class="section-card">
+        <div class="section-header">
+            <h2>Badges</h2>
+            <a href="{{ url_for('badges') }}" class="section-action">View all →</a>
+        </div>
+        {% if earned_badges %}
+        <div class="badge-row">
+            {% for badge in earned_badges[:4] %}
+            <div class="badge-pill earned" title="{{ badge.description }}">
+                <span>{{ badge.icon }}</span>
+                <span>{{ badge.name }}</span>
+            </div>
+            {% endfor %}
+            {% if earned_badges|length > 4 %}
+            <div class="badge-pill more">+{{ earned_badges|length - 4 }} more</div>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="empty-state">No badges yet — complete your first workout to earn one!</p>
+        {% endif %}
+    </div>
+
     <!-- Quick links -->
     <div class="quick-links">
         <a href="{{ url_for('day') }}" class="quick-link">
